@@ -44,11 +44,10 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        _Renderer.color = Color.black;
         _Rigidbody.simulated = false;
 
         if (TryGetComponent(out Collider2D collider)) collider.enabled = false;
-        if (_Animator != null) _Animator.enabled = false;
+        if (_Animator != null) _Animator.SetBool("Dead", true);
     }
 
     protected virtual void OnHit()

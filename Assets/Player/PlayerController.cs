@@ -4,6 +4,9 @@ using UnityEngine.TextCore.Text;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Testing Parameters")]
+    [SerializeField] bool _GodMode = false;
+    [Space(10)]
     [SerializeField] float _MoveSpeed = 10f;
     [SerializeField] float _Acceleration = 10f;
     [SerializeField][Range(0.0001f, 0.1f)] float _MoveThreshold;
@@ -26,10 +29,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0, 1)] float _CellingDistance;
     [SerializeField][Range(0, 1)] float _WallDistance;
     [Space(10)]
+    [SerializeField] bool _UseTriggerColliders = false;
     [SerializeField][Range(0, 90)] float _GravitySlideAngle;
     [SerializeField][Range(0, 90)] float _SurfaceSlideAngle;
     [SerializeField] LayerMask _GroundLayers;
     [Space(10)]
+    [SerializeField] float _InvincibilityTime = 0.5f;
     [SerializeField] float _RespawnTime;
     [SerializeField] float _DamageForce;
     [SerializeField] ShakeData _CameraShake;
@@ -44,12 +49,11 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D _Rb;
     Rigidbody2D.SlideMovement _SlideData;
+    HealthSystem _HealthSystem;
 
     ContactFilter2D _GroundFilter;
     Rigidbody2D _Ground = null;
 
-    bool _IsInvinsible;
-    bool _IsAlive;
     bool _IsGrounded;
     bool _IsMoving;
 
@@ -65,9 +69,13 @@ public class PlayerController : MonoBehaviour
     bool _IsHeadCollide;
     bool _IsWallCollide;
 
+    float _lastHitTime;
+
     bool CanDash => _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
     bool CanAttack => _PlayerAttack != null && _PlayerAttack.CanAttack && !_IsDashing;
     bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;
+    bool HasCollider => _Collider != null;
+    bool IsInvincible => _GodMode || _IsDashing || Time.time - _lastHitTime < _InvincibilityTime;
 
     int _XDirection = 1;
     Vector2 _Velocity = Vector2.zero;
@@ -77,8 +85,10 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _Rb = GetComponent<Rigidbody2D>();
-        _IsAlive = true;
+        _HealthSystem = GetComponent<HealthSystem>();
+        _HealthSystem.Reset();
         EnemySharedData._PlayerTransform = transform;
+        if (HasCollider) _Collider.isTrigger = _UseTriggerColliders;
     }
 
     private void Start()
@@ -99,6 +109,9 @@ public class PlayerController : MonoBehaviour
             InputManager.Instance.Player.Attack.performed += ctx => Attack();
             InputManager.Instance.Player.Sprint.performed += ctx => OnDash();
         }
+
+        if (_HealthSystem != null)
+            _HealthSystem.OnDeath.AddListener(OnDeath);
     }
 
     private void OnDisable()
@@ -111,12 +124,14 @@ public class PlayerController : MonoBehaviour
             InputManager.Instance.Player.Attack.performed -= ctx => Attack();
             InputManager.Instance.Player.Sprint.performed -= ctx => OnDash();
         }
+
+        if (_HealthSystem != null)
+            _HealthSystem.OnDeath.RemoveListener(OnDeath);
     }
 
     private void Update()
     {
-        if (!_IsAlive)
-            return;
+        if (!_HealthSystem.IsAlive) return;
 
         CheckCollision();                   // check head and foot collisions
         UpdateJump();                       // update jump data
@@ -127,8 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_IsAlive)
-            return;
+        if (!_HealthSystem.IsAlive) return;
         Move(Time.fixedDeltaTime);  // apply movement
     }
 
@@ -149,6 +163,7 @@ public class PlayerController : MonoBehaviour
         // Set ground filter for foot and head collision check
         _GroundFilter.useLayerMask = true;
         _GroundFilter.layerMask = _GroundLayers;
+        _GroundFilter.useTriggers = _UseTriggerColliders;
 
         // set slide data for movement collisions
         _SlideData.maxIterations = _MaxIteration;
@@ -161,6 +176,7 @@ public class PlayerController : MonoBehaviour
         _SlideData.SetLayerMask(_GroundLayers);
         _SlideData.useSimulationMove = false;
         _SlideData.useNoMove = true;
+        _SlideData.useAttachedTriggers = _UseTriggerColliders;
     }
 
     private void SetYVelocity(float deltaTime)
@@ -191,7 +207,7 @@ public class PlayerController : MonoBehaviour
         // check if jumping and collides 
         if (!_IsGrounded && _IsWallCollide)
         {
-            _Velocity.x = -_Velocity.x * 0.3f;
+            _Velocity.x = 0;
             if (_IsDashing) ResetDash();
             return;
         }
@@ -320,45 +336,34 @@ public class PlayerController : MonoBehaviour
     void CheckCollision()
     {
         bool wasGrounded = _IsGrounded;
+        _IsGrounded = _IsWallCollide = _IsHeadCollide = false;
 
-        RaycastHit2D[] _HitResults = new RaycastHit2D[2];
-        _IsGrounded = _Velocity.y <= 0 && _Collider.Cast(Vector2.down, _GroundFilter, _HitResults, _GroundDistance) > 0;     // foot collision
+        if (HasCollider)
+        {
+            Vector2 pos = transform.position;
+            pos += _Collider.offset;
 
-        if (!_IsGrounded || !_HitResults[0].transform.TryGetComponent(out _Ground))
-            _Ground = null;
+            RaycastHit2D[] _HitResults = new RaycastHit2D[2];
+            if (Physics2D.CapsuleCast(pos, _Collider.size, _Collider.direction, 0, Vector2.down, _GroundFilter, _HitResults, _GroundDistance) > 0)
+                _IsGrounded = _Velocity.y <= 0 && _Collider.Cast(Vector2.down, _GroundFilter, _HitResults, _GroundDistance) > 0;     // foot collision
 
-        _IsHeadCollide = _Velocity.y > 0 && _Collider.Cast(Vector2.up, _GroundFilter, _HitResults, _CellingDistance) > 0;    // head collision
-        _IsWallCollide = _Collider.Cast(Vector2.right * _XDirection, _GroundFilter, _HitResults, _WallDistance) > 0;         // wall collision
+            if (!_IsGrounded || !_HitResults[0].transform.TryGetComponent(out _Ground))
+                _Ground = null;
 
-        if (wasGrounded && !_IsGrounded)
-            _LastGroundTime = Time.time;
-    }
+            if (Physics2D.CapsuleCast(pos, _Collider.size, _Collider.direction, 0, Vector2.up, _GroundFilter, _HitResults, _CellingDistance) > 0)
+                _IsHeadCollide = _Velocity.y > 0 && _HitResults[0].point.y > transform.position.y; // head collision
 
-    private void ApplyHitReaction(Vector2 hitPos)
-    {
-        Vector2 dir = ((Vector2)transform.position - hitPos).normalized;
-        _DamageResponseForce += dir * _DamageForce;
+            _IsWallCollide = Physics2D.CapsuleCast(pos, _Collider.size * 0.9f, _Collider.direction, 0, Vector2.right * _XDirection,
+                _GroundFilter, _HitResults, _WallDistance) > 0; // wall collision
 
-        if (_Animator != null)
-            _Animator.SetTrigger("Hit");
-        if (CameraManager.Instance)
-            CameraManager.Instance.ApplyShake(_CameraShake);
-    }
-
-    void SetAnimations()
-    {
-        if (_Animator == null)
-            return;
-
-        _Animator.SetBool("Move", _IsMoving);
-        _Animator.SetBool("Grounded", _IsGrounded);
-        _Animator.SetFloat("SpeedY", _Velocity.y);
+            if (wasGrounded && !_IsGrounded)
+                _LastGroundTime = Time.time;
+        }
     }
 
     private Vector2 ComputeAttackDir()
     {
-        Vector2 dir = new(_XDirection, 0);
-        if (!_IsGrounded) dir.y = _MoveInput.y;
+        Vector2 dir = new(_XDirection, _MoveInput.y);
         return dir;
     }
 
@@ -377,12 +382,34 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnDeath()
+    void SetAnimations()
     {
-        if (!_IsAlive)
+        if (_Animator == null)
             return;
 
-        _IsAlive = false;
+        _Animator.SetBool("Move", _IsMoving);
+        _Animator.SetBool("Grounded", _IsGrounded);
+        _Animator.SetFloat("SpeedY", _Velocity.y);
+        _Animator.SetBool("Invincible", IsInvincible);
+    }
+
+    private void ApplyHitReaction(Vector2 hitPos)
+    {
+        if (IsInvincible) return;
+
+        if (_HealthSystem != null)
+            _HealthSystem.TakeDamage(1);
+
+        Vector2 dir = ((Vector2)transform.position - hitPos).normalized;
+        _DamageResponseForce += dir * _DamageForce;
+        _lastHitTime = Time.time;
+
+        if (CameraManager.Instance)
+            CameraManager.Instance.ApplyShake(_CameraShake);
+    }
+
+    private void OnDeath()
+    {
         _Rb.simulated = false;
 
         if (InputManager.HasInstance)
@@ -393,9 +420,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnRespawn()
     {
+        _HealthSystem.Reset();
         transform.position = _CheckpointPos;
 
-        _IsAlive = true;
         _Rb.simulated = true;
 
         if (InputManager.Instance != null)
@@ -431,9 +458,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.collider.CompareTag("Enemy"))
+        if (IsInvincible) return;
+        if (collision.CompareTag("Enemy"))
             ApplyHitReaction(collision.transform.position);
     }
 

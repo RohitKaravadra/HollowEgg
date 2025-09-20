@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2541890062423994050}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.73, z: -10}
+  m_LocalPosition: {x: 0, y: 1.3073504, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,7 +45,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.5372549, g: 0.5803922, b: 0.6627451, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -67,9 +67,9 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 34
-  orthographic: 1
+  far clip plane: 40
+  field of view: 60
+  orthographic: 0
   orthographic size: 7
   m_Depth: -1
   m_CullingMask:
@@ -158,7 +158,7 @@ MonoBehaviour:
   UpdateMethod: 2
   BlendUpdateMethod: 1
   LensModeOverride:
-    Enabled: 0
+    Enabled: 1
     DefaultMode: 2
   DefaultBlend:
     Style: 1
@@ -199,7 +199,7 @@ Transform:
   m_GameObject: {fileID: 6556188264849589457}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.73, z: -10}
+  m_LocalPosition: {x: 0, y: 1.3073504, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -241,12 +241,12 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 34
+    FieldOfView: 60
     OrthographicSize: 7
     NearClipPlane: 0.3
-    FarClipPlane: 1000
+    FarClipPlane: 40
     Dutch: 0
-    ModeOverride: 0
+    ModeOverride: 2
     PhysicalProperties:
       GateFit: 2
       SensorSize: {x: 1, y: 1}
@@ -292,7 +292,7 @@ MonoBehaviour:
   CameraDistance: 10
   DeadZoneDepth: 0
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: 0, y: 0.05}
     DeadZone:
       Enabled: 1
       Size: {x: 0, y: 0}
@@ -302,12 +302,12 @@ MonoBehaviour:
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 0.73, z: 0}
-  Damping: {x: 0.1, y: 0.1, z: 0}
+  Damping: {x: 0.5, y: 0.3, z: 0}
   Lookahead:
     Enabled: 1
-    Time: 0.024
+    Time: 0.2
     Smoothing: 0.6
-    IgnoreY: 0
+    IgnoreY: 1
 --- !u!1 &8348322610176453985
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,16 +355,70 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _FollowCamera: {fileID: 5382343764007329166}
-  _DisableShake: 1
+  _DisableShake: 0
   _MagnitudeCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.2
+      inSlope: 5.729751
+      outSlope: 5.729751
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.052452173
+    - serializedVersion: 3
+      time: 0.3
+      value: 1
+      inSlope: 0.0022320517
+      outSlope: 0.0022320517
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.63283473
+      outWeight: 0.30000007
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.3055037
+      outSlope: -0.3055037
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.41484806
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   _FrequencyCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.2
+      inSlope: 5.729751
+      outSlope: 5.729751
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.052452173
+    - serializedVersion: 3
+      time: 0.3
+      value: 1
+      inSlope: 0.0022320517
+      outSlope: 0.0022320517
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.63283473
+      outWeight: 0.30000007
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.3055037
+      outSlope: -0.3055037
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.41484806
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
