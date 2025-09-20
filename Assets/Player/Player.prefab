@@ -281,15 +281,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _MoveSpeed: 4
   _Acceleration: 30
-  _MoveThreshold: 0.004
-  _DashSpeed: 30
-  _DashCooldown: 1
-  _JumpForce: 8
-  _JumpGravity: 15
+  _MoveThreshold: 0.001
+  _DashSpeed: 20
+  _DashDistance: 4
+  _DashCooldown: 0
+  _JumpForce: 13
   _AirialDrag: 10
   _MaxJumpCount: 2
   _CoyoteTime: 0.2
-  _Gravity: 30
+  _UpGravity: 30
+  _DownGravity: 40
   _MaxGravity: 30
   _MaxIteration: 4
   _GroundDistance: 0.2
@@ -299,9 +300,9 @@ MonoBehaviour:
   _SurfaceSlideAngle: 45
   _GroundLayers:
     serializedVersion: 2
-    m_Bits: 179
+    m_Bits: 51
   _RespawnTime: 0.2
-  _DamageForce: 20
+  _DamageForce: 100
   _CameraShake:
     magnitude: 4
     frequency: 1

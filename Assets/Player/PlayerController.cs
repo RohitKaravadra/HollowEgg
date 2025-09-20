@@ -13,12 +13,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _DashCooldown = 2f;
     [Space(10)]
     [SerializeField] float _JumpForce = 8f;
-    [SerializeField] float _JumpGravity;
     [SerializeField] float _AirialDrag;
     [SerializeField][Range(1, 10)] int _MaxJumpCount;
     [SerializeField] float _CoyoteTime;
     [Space(10)]
-    [SerializeField] float _Gravity;
+    [SerializeField] float _UpGravity;
+    [SerializeField] float _DownGravity;
     [SerializeField] float _MaxGravity;
     [Space(10)]
     [SerializeField][Range(1, 20)] int _MaxIteration;
@@ -51,31 +51,34 @@ public class PlayerController : MonoBehaviour
     bool _IsInvinsible;
     bool _IsAlive;
     bool _IsGrounded;
-    bool _IsJumping;
     bool _IsMoving;
+
+    bool _IsJumping;
+    bool _CanJump;
+    int _JumpCount = 0;
+    float _LastGroundTime;
+
     bool _IsDashing;
+    float _LastDashTime;
+    float _CurDashDist;
 
     bool _IsHeadCollide;
     bool _IsWallCollide;
-    bool _CanJump;
-    bool CanDash => _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
-    bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;
 
-    float _LastGroundTime;
-    float _LastDashTime;
-    int _JumpCount = 0;
+    bool CanDash => _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
+    bool CanAttack => _PlayerAttack != null && _PlayerAttack.CanAttack && !_IsDashing;
+    bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;
 
     int _XDirection = 1;
     Vector2 _Velocity = Vector2.zero;
     Vector2 _DamageResponseForce;
-    float _CurDashDist;
-
     Vector2 _CheckpointPos;
 
     private void Awake()
     {
         _Rb = GetComponent<Rigidbody2D>();
         _IsAlive = true;
+        EnemySharedData._PlayerTransform = transform;
     }
 
     private void Start()
@@ -169,7 +172,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        float gravity = _Velocity.y > 0 ? _JumpGravity : _Gravity;
+        float gravity = _Velocity.y > 0 ? _UpGravity : _DownGravity;
 
         // update gravity
         _Velocity.y = (_IsGrounded ? 0 : _Velocity.y) - gravity * deltaTime;
@@ -255,6 +258,16 @@ public class PlayerController : MonoBehaviour
         return force;
     }
 
+    void SetJump()
+    {
+        if (!_CanJump)
+            return;
+
+        _Velocity.y = _JumpForce;
+        _IsJumping = true;
+        _JumpCount++;
+    }
+
     void UpdateJump()
     {
         // reset jumping
@@ -304,16 +317,6 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    void SetJump()
-    {
-        if (!_CanJump)
-            return;
-
-        _Velocity.y = _JumpForce;
-        _IsJumping = true;
-        _JumpCount++;
-    }
-
     void CheckCollision()
     {
         bool wasGrounded = _IsGrounded;
@@ -361,7 +364,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (_PlayerAttack != null && _PlayerAttack.CanAttack)
+        if (CanAttack)
         {
             if (_Animator != null)
                 _Animator.SetTrigger("Attack");
