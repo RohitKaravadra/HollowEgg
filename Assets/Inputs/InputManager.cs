@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 {
     private PlayerInputActions _PlayerInputs;
     public PlayerInputActions.PlayerActions Player => _PlayerInputs.Player;
+    public PlayerInputActions.UIActions UI => _PlayerInputs.UI;
 
     public static bool HasInstance => Instance != null;
 

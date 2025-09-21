@@ -41,12 +41,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Contrast: 15
+    - _Contrast: 14
     - _Scale: 7
     - _Speed: 0.05
-    - _Strength: 0.2
+    - _Strength: 0.05
     m_Colors:
-    - _Offset: {r: 6.121638, g: 0.5004207, b: 0, a: 0}
+    - _Offset: {r: 0.285227, g: -0.9612047, b: 0, a: 0}
     - _Tiling: {r: 1, g: 0.3, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

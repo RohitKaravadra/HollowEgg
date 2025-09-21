@@ -39,7 +39,6 @@ public class PlayerAttack
         return false;
     }
 
-
     public bool Attack(Vector2 pos, Vector2 dir)
     {
         _LastAttackTime = Time.time;

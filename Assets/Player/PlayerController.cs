@@ -71,6 +71,9 @@ public class PlayerController : MonoBehaviour
 
     float _lastHitTime;
 
+    private bool DashCollected { get; set; }
+    private bool DoubleJumpCollected { get; set; }
+
     bool CanDash => _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
     bool CanAttack => _PlayerAttack != null && _PlayerAttack.CanAttack && !_IsDashing;
     bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;

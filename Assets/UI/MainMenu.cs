@@ -14,13 +14,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button _CrossButton;
     [Space(5)]
     [SerializeField] private GameObject _MainPanel;
-    [SerializeField] private GameObject _OptionsPanel;
+    [SerializeField] private OptionsPanel _OptionsPanel;
     [SerializeField] private GameObject _CreditsPanel;
-    [Space(5)]
-    [SerializeField] private Slider _MasterVolumeSlider;
-    [SerializeField] private Slider _MusicVolumeSlider;
-    [SerializeField] private Slider _SFXVolumeSlider;
-    [SerializeField] private AudioMixer _AudioMixer;
 
     enum Panels
     {
@@ -32,11 +27,7 @@ public class MainMenu : MonoBehaviour
     Panels _CurrentPanel;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        SetPanel(Panels.Main);
-        LoadSettings();
-    }
+    private void Start() => SetPanel(Panels.Main);
 
     private void OnEnable()
     {
@@ -45,10 +36,6 @@ public class MainMenu : MonoBehaviour
         _CreditsButton.onClick.AddListener(OnCreditsButton);
         _QuitButton.onClick.AddListener(OnQuitButton);
         _CrossButton.onClick.AddListener(OnCross);
-
-        _MasterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeSliderUpdate);
-        _MusicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeSliderUpdate);
-        _SFXVolumeSlider.onValueChanged.AddListener(OnSFXVolumeSliderUpdate);
     }
 
     private void OnDisable()
@@ -58,36 +45,13 @@ public class MainMenu : MonoBehaviour
         _CreditsButton.onClick.RemoveListener(OnCreditsButton);
         _QuitButton.onClick.RemoveListener(OnQuitButton);
         _CrossButton.onClick.RemoveListener(OnCross);
-
-        _MasterVolumeSlider.onValueChanged.RemoveListener(OnMasterVolumeSliderUpdate);
-        _MusicVolumeSlider.onValueChanged.RemoveListener(OnMusicVolumeSliderUpdate);
-        _SFXVolumeSlider.onValueChanged.RemoveListener(OnSFXVolumeSliderUpdate);
     }
-
-    private void LoadSettings()
-    {
-        _AudioMixer.GetFloat("MasterVolume", out float masterDb);
-        float masterPercent = AudioManager.DBToPercent(masterDb);
-        _MasterVolumeSlider.SetValueWithoutNotify(masterPercent);
-
-        _AudioMixer.GetFloat("MusicVolume", out float musicDb);
-        float musicPercent = AudioManager.DBToPercent(musicDb);
-        _MusicVolumeSlider.SetValueWithoutNotify(musicPercent);
-
-        _AudioMixer.GetFloat("SFXVolume", out float sfxDb);
-        float sfxPercent = AudioManager.DBToPercent(sfxDb);
-        _SFXVolumeSlider.SetValueWithoutNotify(sfxPercent);
-    }
-
-    private void OnMasterVolumeSliderUpdate(float percent) => _AudioMixer.SetFloat("MasterVolume", AudioManager.PercentToDB(percent));
-    private void OnMusicVolumeSliderUpdate(float percent) => _AudioMixer.SetFloat("MusicVolume", AudioManager.PercentToDB(percent));
-    private void OnSFXVolumeSliderUpdate(float percent) => _AudioMixer.SetFloat("SFXVolume", AudioManager.PercentToDB(percent));
 
     private void SetPanel(Panels panel)
     {
         _CurrentPanel = panel;
         _MainPanel.SetActive(panel == Panels.Main);
-        _OptionsPanel.SetActive(panel == Panels.Options);
+        _OptionsPanel.Enabled = panel == Panels.Options;
         _CreditsPanel.SetActive(panel == Panels.Credits);
         _CrossButton.gameObject.SetActive(panel != Panels.Main);
     }
