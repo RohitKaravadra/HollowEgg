@@ -30,7 +30,7 @@ public class PlayerAttack
         // Perform overlap check
         var hit = Physics2D.OverlapBox(point, size, 0, _HittableLayers);
 
-        if (hit.TryGetComponent<IDamageable>(out var damageable))
+        if (hit && hit.TryGetComponent<IDamageable>(out var damageable))
         {
             damageable.TakeDamage(1); // << typo? should be Damage?
             return true;

@@ -23,7 +23,7 @@ public class FalseKnight : EnemyBase
     [SerializeField] float _JumpForce = 10f;
     [SerializeField] float _Gravity;
     [Space(5)]
-    [SerializeField] float _JumpAttackTime = 1.0f;
+    [SerializeField] float _AttackAnimTime = 1.0f;
     [Space(5)]
     [SerializeField] Rigidbody2D.SlideMovement _SlideMovement;
     [SerializeField] ContactFilter2D _GroundFilter;
@@ -33,9 +33,11 @@ public class FalseKnight : EnemyBase
     Transform _Target;
 
     bool _IsGrounded = false;
-    bool _IsJumping = true;
+    bool _IsJumping = false;
+    bool _IsSlashing = false;
 
     int _MultipleJumpCount = 0;
+    int _MultipleSlashCount = 0;
     int _TargetDir = 0;
 
     int _CurrentStateIndex = 0;
@@ -58,6 +60,7 @@ public class FalseKnight : EnemyBase
                 _StateTimer = 0f;
                 _CurrentStateIndex = 0;
                 _MultipleJumpCount = 0;
+                _MultipleSlashCount = 0;
             }
             else
             {
@@ -66,6 +69,7 @@ public class FalseKnight : EnemyBase
                 _StateTimer = 0f;
                 _CurrentStateIndex = 0;
                 _MultipleJumpCount = 0;
+                _MultipleSlashCount = 0;
             }
         }
     }
@@ -206,7 +210,7 @@ public class FalseKnight : EnemyBase
                 UpdateJump(4);
                 break;
             case State.SlashAttack:
-                // Update slash attack behavior
+                UpdateSlash(5);
                 break;
         }
     }
@@ -226,7 +230,7 @@ public class FalseKnight : EnemyBase
                 StartJump();
                 break;
             case State.SlashAttack:
-                // Start slash attack behavior
+                StartSlash();
                 break;
         }
     }
@@ -238,6 +242,39 @@ public class FalseKnight : EnemyBase
         _CurrentStateIndex = (_CurrentStateIndex + 1) % _StateLoop.Length;
         _StateTimer = 0f;
         StartState();
+    }
+
+
+    private void SetSlash()
+    {
+        _MultipleSlashCount++;
+        _IsSlashing = true;
+    }
+
+    private void StartSlash()
+    {
+        SetSlash();
+        _MultipleSlashCount = 1;
+    }
+
+    private void UpdateSlash(int maxJump)
+    {
+        if (_IsGrounded && _IsSlashing)
+        {
+            _IsSlashing = false;
+            if (_MultipleSlashCount < maxJump)
+            {
+                _Animator.SetTrigger("Attack");
+                _Velocity = Vector2.zero;
+                Invoke(nameof(SetSlash), _AttackAnimTime);
+            }
+            else
+            {
+                _MultipleSlashCount = 0;
+                _Animator.SetTrigger("Attack");
+                NextState();
+            }
+        }
     }
 
     private void SetJump()
@@ -260,14 +297,14 @@ public class FalseKnight : EnemyBase
             _IsJumping = false;
             if (_MultipleJumpCount < maxJump)
             {
-                _Animator.SetTrigger("JumpAttack");
+                _Animator.SetTrigger("Attack");
                 _Velocity = Vector2.zero;
-                Invoke(nameof(SetJump), _JumpAttackTime);
+                Invoke(nameof(SetJump), _AttackAnimTime);
             }
             else
             {
                 _MultipleJumpCount = 0;
-                _Animator.SetTrigger("JumpAttack");
+                _Animator.SetTrigger("Attack");
                 NextState();
             }
         }
@@ -287,6 +324,7 @@ public class FalseKnight : EnemyBase
 
         InAction = false;
         _IsJumping = false;
+        _IsSlashing = false;
         _IsGrounded = true;
 
         _Velocity = Vector2.zero;

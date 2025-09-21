@@ -71,10 +71,10 @@ public class PlayerController : MonoBehaviour
 
     float _lastHitTime;
 
-    private bool DashCollected { get; set; }
-    private bool DoubleJumpCollected { get; set; }
+    private bool DashEnabled { get; set; }
+    private bool DoubleJumpEnabled { get; set; }
 
-    bool CanDash => _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
+    bool CanDash => (_GodMode || DashEnabled) && _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
     bool CanAttack => _PlayerAttack != null && _PlayerAttack.CanAttack && !_IsDashing;
     bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;
     bool HasCollider => _Collider != null;
@@ -177,6 +177,16 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("Checkpoint"))
             OnCheckPoint(collision.transform.position);
+
+        if (collision.CompareTag("Consumable"))
+        {
+            if (collision.TryGetComponent(out Consumable ability))
+            {
+                DashEnabled |= ability.IsDash;
+                DoubleJumpEnabled |= ability.IsDoubleJump;
+                ability.OnConsume();
+            }
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -317,7 +327,7 @@ public class PlayerController : MonoBehaviour
         if (_IsGrounded && _JumpCount > 0)
             _JumpCount = 0;
 
-        _CanJump = _IsGrounded || (_IsJumping && _JumpCount < _MaxJumpCount) || IsCoyote;
+        _CanJump = _IsGrounded || IsCoyote || ((DoubleJumpEnabled || _GodMode) && _IsJumping && _JumpCount < _MaxJumpCount);
     }
 
     void SetDash()

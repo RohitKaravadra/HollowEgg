@@ -26,6 +26,12 @@ public class InputManager : MonoBehaviour
         _PlayerInputs.Enable();
     }
 
+    private void OnDestroy()
+    {
+        _PlayerInputs.Disable();
+        _PlayerInputs.Dispose();
+    }
+
     public void SetPlayerInput(bool val = true)
     {
         if (val) Player.Enable();

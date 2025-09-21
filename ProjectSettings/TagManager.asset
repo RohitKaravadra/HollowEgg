@@ -7,6 +7,7 @@ TagManager:
   - Danger
   - Enemy
   - Checkpoint
+  - Consumable
   layers:
   - Default
   - TransparentFX

@@ -67,9 +67,9 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void Reset()
     {
-        _Rigidbody.simulated = false;
+        if (_Rigidbody != null) _Rigidbody.simulated = false;
         transform.position = _InitPosition;
-        _Rigidbody.simulated = true;
+        if (_Rigidbody != null) _Rigidbody.simulated = true;
 
         if (TryGetComponent(out Collider2D collider)) collider.enabled = true;
         if (_Animator != null) _Animator.SetBool("Dead", false);
