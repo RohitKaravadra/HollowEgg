@@ -23,6 +23,8 @@ public class FalseKnight : EnemyBase
     [SerializeField] float _JumpForce = 10f;
     [SerializeField] float _Gravity;
     [Space(5)]
+    [SerializeField] float _JumpAttackTime = 1.0f;
+    [Space(5)]
     [SerializeField] Rigidbody2D.SlideMovement _SlideMovement;
     [SerializeField] ContactFilter2D _GroundFilter;
     [SerializeField] ShakeData _LandShake;
@@ -31,7 +33,7 @@ public class FalseKnight : EnemyBase
     Transform _Target;
 
     bool _IsGrounded = false;
-    bool _IsJumping = false;
+    bool _IsJumping = true;
 
     int _MultipleJumpCount = 0;
     int _TargetDir = 0;
@@ -61,7 +63,6 @@ public class FalseKnight : EnemyBase
                 _LoopEnabled = false;
                 _Velocity.x = 0;
                 _StateTimer = 0f;
-                _IsJumping = false;
             }
         }
     }
@@ -101,29 +102,15 @@ public class FalseKnight : EnemyBase
             return;
 
         GroundCheck();
-        SetDirection();
 
         _Velocity.y = _IsGrounded ? -_Gravity : _Velocity.y - _Gravity * Time.deltaTime;
 
-        if (_LoopEnabled && HasStates)
-        {
-            _StateTimer += Time.deltaTime;
-            switch (_StateLoop[_CurrentStateIndex].state)
-            {
-                case State.Idle:
-                    Idle();
-                    break;
-                case State.JumpAttack:
-                    JumpAttack();
-                    break;
-                case State.MultipleJumpAttack:
-                    JumpAttack(4);
-                    break;
-                case State.SlashAttack:
-                    // Slash attack behavior
-                    break;
-            }
-        }
+        if (!_LoopEnabled)
+            return;
+
+        CollisionCheck();
+        SetDirection();
+        UpdateState();
 
         SetAnimations();
     }
@@ -150,11 +137,20 @@ public class FalseKnight : EnemyBase
 
     private void SetDirection()
     {
-        if (!HasTarget && !_IsJumping) return;
+        if (!HasTarget || !_IsGrounded) return;
 
         float diff = _Target.position.x - transform.position.x;
         diff = Mathf.Abs(diff) < 0.2f ? 0 : diff;
         _TargetDir = diff == 0 ? 0 : (diff > 0 ? 1 : -1);
+    }
+
+    private void CollisionCheck()
+    {
+        RaycastHit2D[] hits = new RaycastHit2D[2];
+        if (HasCollider && _Collider.Cast(Vector2.right * _TargetDir, _GroundFilter, hits, 0.4f) > 0)
+        {
+            _Velocity.x = 0;
+        }
     }
 
     private void GroundCheck()
@@ -190,40 +186,46 @@ public class FalseKnight : EnemyBase
         return new Vector2(velocityX, velocityY);
     }
 
-    private void SetJump()
+    private void UpdateState()
     {
-        if (_Rigidbody != null && _IsGrounded)
+        if (!HasStates) return;
+
+        _StateTimer += Time.deltaTime;
+        switch (_StateLoop[_CurrentStateIndex].state)
         {
-            _Velocity = CalculateJumpVelocity(_Rigidbody.position, _Target.position, _JumpForce);
-            _IsJumping = true;
+            case State.Idle:
+                UpdateIdle();
+                break;
+            case State.JumpAttack:
+                UpdateJump(1);
+                break;
+            case State.MultipleJumpAttack:
+                UpdateJump(4);
+                break;
+            case State.SlashAttack:
+                // Update slash attack behavior
+                break;
         }
     }
 
-    private void JumpAttack(int maxJump = 1)
+    private void StartState()
     {
-        if (_IsJumping)
+        if (!HasStates) return;
+        switch (_StateLoop[_CurrentStateIndex].state)
         {
-            _IsJumping = false;
-            if (_MultipleJumpCount < maxJump)
-            {
-                SetJump();
-                _MultipleJumpCount++;
-            }
-            else
-            {
-                _MultipleJumpCount = 0;
-                _Velocity = Vector2.zero;
-                NextState();
-            }
+            case State.Idle:
+                StartIdle();
+                break;
+            case State.JumpAttack:
+                StartJump();
+                break;
+            case State.MultipleJumpAttack:
+                StartJump();
+                break;
+            case State.SlashAttack:
+                // Start slash attack behavior
+                break;
         }
-        else
-            SetJump();
-    }
-
-    private void Idle()
-    {
-        if (_StateLoop[_CurrentStateIndex].duration <= _StateTimer)
-            NextState();
     }
 
     private void NextState()
@@ -232,7 +234,49 @@ public class FalseKnight : EnemyBase
 
         _CurrentStateIndex = (_CurrentStateIndex + 1) % _StateLoop.Length;
         _StateTimer = 0f;
+        StartState();
 
         Debug.Log($"Current State: {_StateLoop[_CurrentStateIndex].state}");
+    }
+
+    private void SetJump()
+    {
+        _Velocity = CalculateJumpVelocity(_Rigidbody.position, _Target.position, _JumpForce);
+        _MultipleJumpCount++;
+        _IsJumping = true;
+    }
+
+    private void StartJump()
+    {
+        SetJump();
+        _MultipleJumpCount = 1;
+    }
+
+    private void UpdateJump(int maxJump)
+    {
+        if (_IsGrounded && _IsJumping)
+        {
+            _IsJumping = false;
+            if (_MultipleJumpCount < maxJump)
+            {
+                _Animator.SetTrigger("JumpAttack");
+                _Velocity = Vector2.zero;
+                Invoke(nameof(SetJump), _JumpAttackTime);
+            }
+            else
+            {
+                _MultipleJumpCount = 0;
+                _Animator.SetTrigger("JumpAttack");
+                NextState();
+            }
+        }
+    }
+
+    private void StartIdle() => _Velocity = Vector2.zero;
+
+    private void UpdateIdle()
+    {
+        if (_StateLoop[_CurrentStateIndex].duration <= _StateTimer)
+            NextState();
     }
 }

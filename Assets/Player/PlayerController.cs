@@ -66,8 +66,8 @@ public class PlayerController : MonoBehaviour
     float _LastDashTime;
     float _CurDashDist;
 
-    bool _IsHeadCollide;
-    bool _IsWallCollide;
+    bool _IsCeilingAbove;
+    bool _IsWallAhead;
 
     float _lastHitTime;
 
@@ -135,8 +135,8 @@ public class PlayerController : MonoBehaviour
 
         CheckCollision();                   // check head and foot collisions
         UpdateJump();                       // update jump data
-        SetAnimations();                    // set animation states
         UpdateMovement(Time.deltaTime);     // update movement velocities
+        SetAnimations();                    // set animation states
         SetVisuals();                       // set player visuals
     }
 
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
     private void SetYVelocity(float deltaTime)
     {
         // check for head collision
-        if (_IsHeadCollide && _Velocity.y > 0)
+        if (_IsCeilingAbove && _Velocity.y > 0)
         {
             _Velocity.y = 0;
             return;
@@ -195,17 +195,13 @@ public class PlayerController : MonoBehaviour
         _Velocity.y = Mathf.Clamp(_Velocity.y, -_MaxGravity, _MaxGravity);
     }
 
-    private void SetVisuals()
-    {
-        // swap visuals if needed
-        if (_Velocity.x != 0)
-            _Visuals.localScale = new Vector3(_Velocity.x < 0 ? -1 : 1, 1, 1);
-    }
-
     private void SetXVelocity(float deltaTime)
     {
+        // udate direction
+        _XDirection = _IsMoving ? (_MoveInput.x > 0 ? 1 : -1) : _XDirection;
+
         // check if jumping and collides 
-        if (!_IsGrounded && _IsWallCollide)
+        if (!_IsGrounded && _IsWallAhead)
         {
             _Velocity.x = 0;
             if (_IsDashing) ResetDash();
@@ -214,14 +210,11 @@ public class PlayerController : MonoBehaviour
 
         if (_IsDashing)
         {
-            if (_IsWallCollide)
+            if (_IsWallAhead)
                 ResetDash();
             else if (UpdateDash())
                 return;
         }
-
-        // udate direction
-        _XDirection = _IsMoving ? (_MoveInput.x > 0 ? 1 : -1) : _XDirection;
 
         // update speed and acceleration
         float speed = (_IsMoving ? _MoveSpeed : 0);
@@ -265,6 +258,12 @@ public class PlayerController : MonoBehaviour
 
         // update new position of rigidbody
         _Rb.MovePosition(pos);
+    }
+
+    private void SetVisuals()
+    {
+        if (_Velocity.x != 0)
+            _Visuals.localScale = new Vector3(_Velocity.x < 0 ? -1 : 1, 1, 1);
     }
 
     private Vector2 GetDamageForce()
@@ -336,7 +335,7 @@ public class PlayerController : MonoBehaviour
     void CheckCollision()
     {
         bool wasGrounded = _IsGrounded;
-        _IsGrounded = _IsWallCollide = _IsHeadCollide = false;
+        _IsGrounded = _IsWallAhead = _IsCeilingAbove = false;
 
         if (HasCollider)
         {
@@ -351,9 +350,9 @@ public class PlayerController : MonoBehaviour
                 _Ground = null;
 
             if (Physics2D.CapsuleCast(pos, _Collider.size, _Collider.direction, 0, Vector2.up, _GroundFilter, _HitResults, _CellingDistance) > 0)
-                _IsHeadCollide = _Velocity.y > 0 && _HitResults[0].point.y > transform.position.y; // head collision
+                _IsCeilingAbove = _Velocity.y > 0 && _HitResults[0].point.y > transform.position.y; // head collision
 
-            _IsWallCollide = Physics2D.CapsuleCast(pos, _Collider.size * 0.9f, _Collider.direction, 0, Vector2.right * _XDirection,
+            _IsWallAhead = Physics2D.CapsuleCast(pos, _Collider.size * 0.9f, _Collider.direction, 0, Vector2.right * _XDirection,
                 _GroundFilter, _HitResults, _WallDistance) > 0; // wall collision
 
             if (wasGrounded && !_IsGrounded)

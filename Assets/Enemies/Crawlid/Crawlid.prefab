@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _StunnedTime: 0.5
-  _WalkSpeed: 1.2
+  _WalkSpeed: 3
   _Offset: {x: 0, y: -0.2}
   _GroundCheckDistance: 0.61
   _SideCheckDistance: 0.56
