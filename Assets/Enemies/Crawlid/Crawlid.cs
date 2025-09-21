@@ -15,6 +15,12 @@ public class Crawlid : EnemyBase
     bool CanMove => Time.time - _LastHitTime > _StunnedTime;
     int _Dir = 1;
 
+    override public void Start()
+    {
+        base.Start();
+        _Dir = Random.value > 0.5f ? 1 : -1;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

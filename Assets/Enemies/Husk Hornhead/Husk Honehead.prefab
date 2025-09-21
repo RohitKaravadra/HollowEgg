@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ChaseSpeed: 6
   _ChaseRange: 5
-  _ChaseHeight: 0.3
+  _ChaseHeight: 0.4
   _Offset: {x: 0, y: -0.13}
   _GroundCheckDistance: 0.75
   _SideCheckDistance: 0.67

@@ -34,6 +34,7 @@ public class WanderingHusk : EnemyBase
     {
         base.Start();
         _Target = EnemySharedData._PlayerTransform;
+        _Dir = Random.value > 0.5f ? 1 : -1;
     }
 
     public override void OnEnable() => base.OnEnable();

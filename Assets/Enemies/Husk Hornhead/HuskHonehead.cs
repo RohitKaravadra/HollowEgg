@@ -30,13 +30,14 @@ public class HuskHonehead : EnemyBase
     {
         base.Start();
         _Target = EnemySharedData._PlayerTransform;
+        _Dir = Random.value > 0.5f ? 1 : -1;
     }
 
     private bool CanChase()
     {
         if (_Target == null) return false;
         Vector2 diff = transform.position - _Target.position;
-        _Dir = diff.x > 0 ? -1 : 1;
+        _Dir = Mathf.Abs(diff.x) < 0.2f ? _Dir : diff.x > 0 ? -1 : 1;
         return Mathf.Abs(diff.x) < _ChaseRange && Mathf.Abs(diff.y) < _ChaseHeight;
     }
 
@@ -101,5 +102,12 @@ public class HuskHonehead : EnemyBase
         SetState();
         Move();
         _Renderer.flipX = _Dir < 0;
+    }
+
+    protected override void Reset()
+    {
+        base.Reset();
+        _CurrentState = State.Idle;
+        _LastHitTime = 0f;
     }
 }

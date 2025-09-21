@@ -2551,7 +2551,7 @@
     "m_ObjectId": "ac1ac0abdddc41b3a2c938eb319f914e",
     "m_Title": "World Space UVs",
     "m_Position": {
-        "x": -2348.0,
+        "x": -2348.000244140625,
         "y": 180.80001831054688
     }
 }
@@ -2586,7 +2586,7 @@
     "m_ObjectId": "b15b3bd227524b7d9d2c464f73b3fcda",
     "m_Title": "Wrapping Logic",
     "m_Position": {
-        "x": -1560.800048828125,
+        "x": -1560.8001708984375,
         "y": 568.0
     }
 }

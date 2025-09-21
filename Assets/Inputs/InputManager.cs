@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private bool _Paused;
     private PlayerInputActions _PlayerInputs;
-    private PlayerInputActions.UIActions UI => _PlayerInputs.UI;
-
     public PlayerInputActions.PlayerActions Player => _PlayerInputs.Player;
 
     public static bool HasInstance => Instance != null;
@@ -28,14 +25,12 @@ public class InputManager : MonoBehaviour
         _PlayerInputs.Enable();
     }
 
-    private void Start()
+    public void SetPlayerInput(bool val = true)
     {
-        _Paused = false;
-        Cursor.lockState = _Paused ? CursorLockMode.None : CursorLockMode.Locked;
-
-        UI.Enable();
-
-        if (_Paused) Player.Disable();
-        else Player.Enable();
+        if (val) Player.Enable();
+        else Player.Disable();
+        Cursor.lockState = val ? CursorLockMode.Locked : CursorLockMode.None;
     }
+
+    private void Start() => SetPlayerInput(true);
 }

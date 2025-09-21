@@ -53,7 +53,7 @@ MonoBehaviour:
   _WalkSpeed: 3
   _ChaseSpeed: 5
   _ChaseRange: 5
-  _ChaseHeight: 0.3
+  _ChaseHeight: 0.35
   _Offset: {x: 0, y: -0.13}
   _GroundCheckDistance: 0.71
   _SideCheckDistance: 0.59

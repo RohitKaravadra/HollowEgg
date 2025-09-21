@@ -18,7 +18,7 @@ public class FalseKnight : EnemyBase
         SlashAttack
     }
 
-    [SerializeField] bool _LoopEnabled = false;
+    [SerializeField] bool _InAction = false;
     [SerializeField] StateData[] _StateLoop;
     [SerializeField] float _JumpForce = 10f;
     [SerializeField] float _Gravity;
@@ -47,22 +47,25 @@ public class FalseKnight : EnemyBase
 
     Vector2 _Velocity;
 
-    public bool LoopEnabled
+    public bool InAction
     {
-        get => _LoopEnabled;
+        get => _InAction;
         set
         {
             if (value)
             {
-                _LoopEnabled = true;
-                _CurrentStateIndex = 0;
+                _InAction = true;
                 _StateTimer = 0f;
+                _CurrentStateIndex = 0;
+                _MultipleJumpCount = 0;
             }
             else
             {
-                _LoopEnabled = false;
-                _Velocity.x = 0;
+                _InAction = false;
+                _Velocity = Vector2.zero;
                 _StateTimer = 0f;
+                _CurrentStateIndex = 0;
+                _MultipleJumpCount = 0;
             }
         }
     }
@@ -87,13 +90,13 @@ public class FalseKnight : EnemyBase
     override public void OnEnable()
     {
         base.OnEnable();
-        // Additional enable logic for FalseKnight can be added here
+        GameManager.OnBossFightTriggered += () => InAction = true;
     }
 
     override public void OnDisable()
     {
         base.OnDisable();
-        // Additional disable logic for FalseKnight can be added here
+        GameManager.OnBossFightTriggered -= () => InAction = true;
     }
 
     private void Update()
@@ -105,12 +108,12 @@ public class FalseKnight : EnemyBase
 
         _Velocity.y = _IsGrounded ? -_Gravity : _Velocity.y - _Gravity * Time.deltaTime;
 
-        if (!_LoopEnabled)
-            return;
-
-        CollisionCheck();
-        SetDirection();
-        UpdateState();
+        if (_InAction)
+        {
+            CollisionCheck();
+            SetDirection();
+            UpdateState();
+        }
 
         SetAnimations();
     }
@@ -235,8 +238,6 @@ public class FalseKnight : EnemyBase
         _CurrentStateIndex = (_CurrentStateIndex + 1) % _StateLoop.Length;
         _StateTimer = 0f;
         StartState();
-
-        Debug.Log($"Current State: {_StateLoop[_CurrentStateIndex].state}");
     }
 
     private void SetJump()
@@ -278,5 +279,24 @@ public class FalseKnight : EnemyBase
     {
         if (_StateLoop[_CurrentStateIndex].duration <= _StateTimer)
             NextState();
+    }
+
+    protected override void Reset()
+    {
+        CancelInvoke();
+
+        InAction = false;
+        _IsJumping = false;
+        _IsGrounded = true;
+
+        _Velocity = Vector2.zero;
+        base.Reset();
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        InAction = false;
+        GameManager.OnBossDeathTriggered?.Invoke();
     }
 }

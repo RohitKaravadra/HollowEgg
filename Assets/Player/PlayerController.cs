@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
     bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;
     bool HasCollider => _Collider != null;
     bool IsInvincible => _GodMode || _IsDashing || Time.time - _lastHitTime < _InvincibilityTime;
+    public bool IsAlive => _HealthSystem != null && _HealthSystem.IsAlive;
 
     int _XDirection = 1;
     Vector2 _Velocity = Vector2.zero;
@@ -101,6 +102,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.OnPlayerRespawn += OnRespawn;
+
         if (InputManager.HasInstance)
         {
             InputManager.Instance.Player.Jump.performed += ctx => OnJump(true);
@@ -116,6 +119,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
+        GameManager.OnPlayerRespawn -= OnRespawn;
+
         if (InputManager.HasInstance)
         {
             InputManager.Instance.Player.Jump.performed -= ctx => OnJump(true);
@@ -131,8 +136,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!_HealthSystem.IsAlive) return;
-
         CheckCollision();                   // check head and foot collisions
         UpdateJump();                       // update jump data
         UpdateMovement(Time.deltaTime);     // update movement velocities
@@ -140,15 +143,44 @@ public class PlayerController : MonoBehaviour
         SetVisuals();                       // set player visuals
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() => Move(Time.fixedDeltaTime);  // apply movement
+
+    private void OnDestroy() => CancelInvoke();
+
+    private void OnDrawGizmos()
     {
-        if (!_HealthSystem.IsAlive) return;
-        Move(Time.fixedDeltaTime);  // apply movement
+        if (_Collider != null)
+        {
+            float hBody = _Collider.size.y / 2;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(_Collider.transform.position + Vector3.up * hBody, Vector2.up * _CellingDistance);
+            Gizmos.DrawRay(_Collider.transform.position + Vector3.down * hBody, Vector2.down * _GroundDistance);
+            Gizmos.DrawRay(_Collider.transform.position + (_Collider.size.x * _XDirection * Vector3.right / 2),
+                _WallDistance * _XDirection * Vector2.right);
+        }
+
+        _PlayerAttack?.OnDrawGizmos(transform.position, ComputeAttackDir());
     }
 
-    private void OnDestroy()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        CancelInvoke(nameof(OnRespawn));
+        if (collision.CompareTag("Danger"))
+        {
+            OnDeath();
+            if (CameraManager.HasInstance)
+                CameraManager.Instance.ApplyShake(_CameraShake);
+        }
+
+        if (collision.CompareTag("Checkpoint"))
+            OnCheckPoint(collision.transform.position);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (IsInvincible || !IsAlive) return;
+        if (collision.CompareTag("Enemy"))
+            ApplyHitReaction(collision.transform.position);
     }
 
     private void SetData()
@@ -247,10 +279,7 @@ public class PlayerController : MonoBehaviour
 
         // apply moving objects velocity
         if (_Ground != null)
-        {
-            print(_Ground.linearVelocityX);
             pos.x += _Ground.linearVelocityX * deltaTime;
-        }
 
         // update dash distance
         if (_IsDashing)
@@ -264,13 +293,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_Velocity.x != 0)
             _Visuals.localScale = new Vector3(_Velocity.x < 0 ? -1 : 1, 1, 1);
-    }
-
-    private Vector2 GetDamageForce()
-    {
-        Vector2 force = _DamageResponseForce;
-        _DamageResponseForce = Vector2.zero;
-        return force;
     }
 
     void SetJump()
@@ -332,6 +354,27 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
+    private Vector2 ComputeAttackDir()
+    {
+        Vector2 dir = new(_XDirection, _MoveInput.y);
+        return dir;
+    }
+
+    private void Attack()
+    {
+        if (CanAttack)
+        {
+            if (_Animator != null)
+                _Animator.SetTrigger("Attack");
+
+            if (_PlayerAttack.Attack(transform.position, ComputeAttackDir()))
+            {
+                if (CameraManager.HasInstance)
+                    CameraManager.Instance.ApplyShake(_CameraShake);
+            }
+        }
+    }
+
     void CheckCollision()
     {
         bool wasGrounded = _IsGrounded;
@@ -360,27 +403,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private Vector2 ComputeAttackDir()
-    {
-        Vector2 dir = new(_XDirection, _MoveInput.y);
-        return dir;
-    }
-
-    private void Attack()
-    {
-        if (CanAttack)
-        {
-            if (_Animator != null)
-                _Animator.SetTrigger("Attack");
-
-            if (_PlayerAttack.Attack(transform.position, ComputeAttackDir()))
-            {
-                if (CameraManager.HasInstance)
-                    CameraManager.Instance.ApplyShake(_CameraShake);
-            }
-        }
-    }
-
     void SetAnimations()
     {
         if (_Animator == null)
@@ -390,6 +412,13 @@ public class PlayerController : MonoBehaviour
         _Animator.SetBool("Grounded", _IsGrounded);
         _Animator.SetFloat("SpeedY", _Velocity.y);
         _Animator.SetBool("Invincible", IsInvincible);
+    }
+
+    private Vector2 GetDamageForce()
+    {
+        Vector2 force = _DamageResponseForce;
+        _DamageResponseForce = Vector2.zero;
+        return force;
     }
 
     private void ApplyHitReaction(Vector2 hitPos)
@@ -409,60 +438,26 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeath()
     {
-        _Rb.simulated = false;
-
         if (InputManager.HasInstance)
-            InputManager.Instance.Player.Disable();
+            InputManager.Instance.SetPlayerInput(false);
 
-        Invoke(nameof(OnRespawn), _RespawnTime);
+        GameManager.OnPlayerDead?.Invoke();
+        // Invoke(nameof(OnRespawn), _RespawnTime);
     }
 
     private void OnRespawn()
     {
         _HealthSystem.Reset();
-        transform.position = _CheckpointPos;
 
+        _Rb.simulated = false;
+        transform.position = _CheckpointPos;
         _Rb.simulated = true;
 
         if (InputManager.Instance != null)
-            InputManager.Instance.Player.Enable();
+            InputManager.Instance.SetPlayerInput(true);
     }
 
     private void OnCheckPoint(Vector2 pos) => _CheckpointPos = pos;
-
-    private void OnDrawGizmos()
-    {
-        //debug head collision ray
-        if (_Collider != null)
-        {
-            float hBody = _Collider.size.y / 2;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(_Collider.transform.position + Vector3.up * hBody, Vector2.up * _CellingDistance);
-            Gizmos.DrawRay(_Collider.transform.position + Vector3.down * hBody, Vector2.down * _GroundDistance);
-            Gizmos.DrawRay(_Collider.transform.position + (_Collider.size.x * _XDirection * Vector3.right / 2),
-                _WallDistance * _XDirection * Vector2.right);
-        }
-
-        _PlayerAttack?.OnDrawGizmos(transform.position, ComputeAttackDir());
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Danger"))
-        {
-            OnDeath();
-            if (CameraManager.HasInstance)
-                CameraManager.Instance.ApplyShake(_CameraShake);
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (IsInvincible) return;
-        if (collision.CompareTag("Enemy"))
-            ApplyHitReaction(collision.transform.position);
-    }
 
     #region Inputs
     void OnDash() => SetDash();
