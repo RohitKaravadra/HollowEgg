@@ -11,6 +11,10 @@ public class HuskHonehead : EnemyBase
     [SerializeField] private float _SideCheckDistance;
     [SerializeField] private LayerMask _GroundLayer;
 
+    private bool _WallAhead = false;
+    private bool _GroundAhead = false;
+    private bool IsGrounded => _Rigidbody.IsTouchingLayers(_GroundLayer);
+
     private int _Dir = 1;
     private Transform _Target;
 
@@ -19,7 +23,6 @@ public class HuskHonehead : EnemyBase
         Idle,
         Chase
     }
-
     State _CurrentState = State.Idle;
 
     public override void OnEnable() => base.OnEnable();
@@ -31,13 +34,22 @@ public class HuskHonehead : EnemyBase
         base.Start();
         _Target = EnemySharedData._PlayerTransform;
         _Dir = Random.value > 0.5f ? 1 : -1;
+        _Renderer.flipX = _Dir < 0;
     }
 
     private bool CanChase()
     {
         if (_Target == null) return false;
+
+        if (_WallAhead && !_GroundAhead)
+            return false;
+
         Vector2 diff = transform.position - _Target.position;
-        _Dir = Mathf.Abs(diff.x) < 0.2f ? _Dir : diff.x > 0 ? -1 : 1;
+
+        if (Mathf.Abs(diff.x) < 0.2f)
+            return false;
+
+        _Dir = diff.x > 0 ? -1 : 1;
         return Mathf.Abs(diff.x) < _ChaseRange && Mathf.Abs(diff.y) < _ChaseHeight;
     }
 
@@ -59,21 +71,25 @@ public class HuskHonehead : EnemyBase
 
     private void Update()
     {
+        if (!CanMove || !_HealthSystem.IsAlive)
+            return;
+
+        CheckCollisions();
+        SetState();
+        Move();
+        _Renderer.flipX = _Dir < 0;
+
         if (_Animator != null)
             _Animator.SetBool("Chase", _CurrentState == State.Chase);
     }
 
-    private bool WallAhead()
+    private void CheckCollisions()
     {
         Vector2 point = _Rigidbody.position + _Offset;
-        return Physics2D.Raycast(point, Vector2.right * _Dir, _SideCheckDistance, _GroundLayer);
-    }
+        _WallAhead = Physics2D.Raycast(point, Vector2.right * _Dir, _SideCheckDistance, _GroundLayer);
 
-    private bool GroundAhead()
-    {
-        Vector2 point = _Rigidbody.position + _Offset;
         point += _Dir * _SideCheckDistance * Vector2.right;
-        return Physics2D.Raycast(point, Vector2.down, _GroundCheckDistance, _GroundLayer);
+        _GroundAhead = Physics2D.Raycast(point, Vector2.down, _GroundCheckDistance, _GroundLayer);
     }
 
     private void SetState()
@@ -83,25 +99,15 @@ public class HuskHonehead : EnemyBase
 
         if (_CurrentState == State.Chase)
         {
-            if (WallAhead() || !GroundAhead())
+            if (_WallAhead || !_GroundAhead)
                 _CurrentState = State.Idle;
         }
     }
 
     private void Move()
     {
-        if (State.Idle == _CurrentState) return;
-        Vector2 vel = _ChaseSpeed * _Dir * Time.fixedDeltaTime * Vector2.right;
-        _Rigidbody.MovePosition(_Rigidbody.position + vel);
-    }
-
-    private void FixedUpdate()
-    {
-        if (!_HealthSystem.IsAlive) return;
-
-        SetState();
-        Move();
-        _Renderer.flipX = _Dir < 0;
+        if (!IsGrounded) return;
+        _Rigidbody.linearVelocityX = _CurrentState == State.Chase ? _ChaseSpeed * _Dir : 0;
     }
 
     protected override void Reset()

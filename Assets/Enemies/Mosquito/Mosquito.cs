@@ -12,6 +12,7 @@ public class Mosquito : EnemyBase
 
     Vector2 _Dir;
     CircleCollider2D _Collider;
+    LayerMask _MyLayer;
     private float _LastDirUpdateTime;
 
     override public void Awake()
@@ -20,31 +21,18 @@ public class Mosquito : EnemyBase
         _Dir = Random.insideUnitCircle.normalized;
         _Rigidbody.gravityScale = 0;
         _Collider = GetComponent<CircleCollider2D>();
+        _MyLayer = gameObject.layer;
     }
 
-    override public void Start()
-    {
-        base.Start();
-    }
-
-    override public void OnEnable()
-    {
-        base.OnEnable();
-    }
-
-    override public void OnDisable()
-    {
-        base.OnDisable();
-    }
-
-    private void FixedUpdate()
+    private void Update()
     {
         if (_HealthSystem != null && !_HealthSystem.IsAlive)
             return;
 
-        UpdateDirection();
-        ComputeDirection();
+        if (!ComputeDirection())
+            UpdateDirection();
         Move();
+        _Renderer.flipX = _Dir.x < 0;
     }
 
     private void OnDrawGizmos()
@@ -65,46 +53,50 @@ public class Mosquito : EnemyBase
         _LastDirUpdateTime = Time.time;
     }
 
-    private void ComputeDirection()
+    private bool ComputeDirection()
     {
         Vector2 origin = _Rigidbody.position;
         RaycastHit2D hit = Physics2D.CircleCast(origin, _Collider.radius, _Dir, _CheckDistane, _ObstacleLayer);
         if (hit)
         {
             _Dir = Vector2.Reflect(_Dir, hit.normal);
-            return;
+            return true;
         }
 
         Vector2 newPos = origin + _Speed * Time.fixedDeltaTime * _Dir;
-        if (Mathf.Abs(newPos.x - _InitPosition.x) > _Range.x * 0.5f)
+        Vector2 diff = newPos - _InitPosition;
+        bool changed = false;
+        if (Mathf.Abs(diff.x) > _Range.x * 0.5f)
+        {
             _Dir.x = -_Dir.x;
-        if (Mathf.Abs(newPos.y - _InitPosition.y) > _Range.y * 0.5f)
+            changed = true;
+        }
+        if (Mathf.Abs(diff.y) > _Range.y * 0.5f)
+        {
             _Dir.y = -_Dir.y;
-
-        _Renderer.flipX = _Dir.x < 0;
+            changed = true;
+        }
+        return changed;
     }
 
     private void Move()
     {
-        Vector2 vel = _Dir * _Speed * Time.fixedDeltaTime;
+        Vector2 vel = _Speed * Time.fixedDeltaTime * _Dir;
         _Rigidbody.MovePosition(_Rigidbody.position + vel);
     }
 
     protected override void OnDeath()
     {
-        base.OnDeath();
+        CancelInvoke();
+        _Renderer.color = Color.gray;
+        if (_Animator != null) _Animator.SetBool("Dead", true);
+        gameObject.layer = LayerMask.NameToLayer("Ignore Player Collision");
         _Rigidbody.gravityScale = 4;
-        // Additional death behavior for Mosquito can be added here
-    }
-
-    protected override void OnHit()
-    {
-        base.OnHit();
-        // Additional hit behavior for Mosquito can be added here
     }
 
     protected override void Reset()
     {
+        gameObject.layer = _MyLayer;
         _Rigidbody.gravityScale = 0;
         base.Reset();
     }

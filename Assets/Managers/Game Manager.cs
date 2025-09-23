@@ -12,8 +12,6 @@ public class GameManager : MonoBehaviour
     public static Action OnBossDeathTriggered;
     public static Action OnResetEnemies;
 
-    bool _IsBossFight = false;
-
     public static bool HasInstance => Instance != null;
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -27,19 +25,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    private void OnEnable()
-    {
-        OnPlayerDead += PlayerDead;
-        OnBossFightTriggered += BossFightTriggered;
-        OnBossDeathTriggered += BossDeathTriggered;
-    }
-
-    private void OnDisable()
-    {
-        OnPlayerDead -= PlayerDead;
-        OnBossFightTriggered -= BossFightTriggered;
-        OnBossDeathTriggered -= BossDeathTriggered;
-    }
+    private void OnEnable() => OnPlayerDead += PlayerDead;
+    private void OnDisable() => OnPlayerDead -= PlayerDead;
 
     private void OnDestroy() => CancelInvoke();
 
@@ -49,29 +36,5 @@ public class GameManager : MonoBehaviour
         OnResetEnemies?.Invoke();
     }
 
-    private void BossFightTriggered()
-    {
-        _IsBossFight = true;
-    }
-
-    private void ReturnToMenu() => SceneManager.LoadScene(0);
-
-    private void BossDeathTriggered()
-    {
-        _IsBossFight = false;
-        if (InputManager.HasInstance)
-        {
-            InputManager.Instance.SetPlayerInput(false);
-        }
-        Invoke(nameof(ReturnToMenu), 2f);
-    }
-
-    private void PlayerDead()
-    {
-        if (_IsBossFight)
-        {
-            _IsBossFight = false;
-        }
-        Invoke(nameof(RespawnPlayer), _RespawnDelay);
-    }
+    private void PlayerDead() => Invoke(nameof(RespawnPlayer), _RespawnDelay);
 }

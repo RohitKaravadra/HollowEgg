@@ -333,6 +333,7 @@ public class FalseKnight : EnemyBase
 
     protected override void OnDeath()
     {
+        Debug.Log("False Knight defeated!");
         base.OnDeath();
         InAction = false;
         GameManager.OnBossDeathTriggered?.Invoke();

@@ -12,12 +12,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ignore Player Collision
   - Water
   - UI
   - Player
   - Enemy
-  - 
+  - Camera
   - 
   - 
   - 

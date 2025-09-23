@@ -1,11 +1,10 @@
 
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class WanderingHusk : EnemyBase
 {
-    [SerializeField] private float _StunnedTime = 0.5f;
-    [Space(5)]
     [SerializeField] private float _WalkSpeed = 1.2f;
     [SerializeField] private float _ChaseSpeed = 2f;
     [SerializeField] private float _ChaseRange = 5f;
@@ -16,7 +15,10 @@ public class WanderingHusk : EnemyBase
     [SerializeField] private float _SideCheckDistance;
     [SerializeField] private LayerMask _GroundLayer;
 
-    private bool CanMove => Time.time - _LastHitTime > _StunnedTime;
+    private bool _WallAhead = false;
+    private bool _GroundAhead = false;
+    private bool IsGrounded => _Rigidbody.IsTouchingLayers(_GroundLayer);
+    private bool _TooCloseToTarget = false;
 
     private int _Dir = 1;
     private int _ChaseDir = 1;
@@ -27,7 +29,6 @@ public class WanderingHusk : EnemyBase
         Patrol,
         Chase
     }
-
     State _CurrentState = State.Patrol;
 
     public override void Start()
@@ -43,7 +44,15 @@ public class WanderingHusk : EnemyBase
     private bool CanChase()
     {
         if (_Target == null) return false;
+
+        if (_WallAhead && !_GroundAhead)
+            return false;
+
         Vector2 diff = transform.position - _Target.position;
+
+        if (_TooCloseToTarget = Mathf.Abs(diff.x) < 0.2f)
+            return false;
+
         _ChaseDir = diff.x > 0 ? -1 : 1;
         return Mathf.Abs(diff.x) < _ChaseRange && Mathf.Abs(diff.y) < _ChaseHeight;
     }
@@ -66,30 +75,37 @@ public class WanderingHusk : EnemyBase
 
     private void Update()
     {
-        if (_Animator != null)
-            _Animator.SetBool("Chase", _CurrentState == State.Chase);
+        if (!CanMove || !_HealthSystem.IsAlive)
+            return;
+
+        CheckCollisions();
+        SetState();
+        SetDirections();
+        Move();
+        _Renderer.flipX = _Dir < 0;
+
+        _Animator.SetBool("Chase", _CurrentState == State.Chase);
     }
 
-    private bool WallAhead()
+    private void CheckCollisions()
     {
         Vector2 point = _Rigidbody.position + _Offset;
-        return Physics2D.Raycast(point, Vector2.right * _Dir, _SideCheckDistance, _GroundLayer);
-    }
+        _WallAhead = Physics2D.Raycast(point, Vector2.right * _Dir, _SideCheckDistance, _GroundLayer);
 
-    private bool GroundAhead()
-    {
-        Vector2 point = _Rigidbody.position + _Offset;
         point += _Dir * _SideCheckDistance * Vector2.right;
-        return Physics2D.Raycast(point, Vector2.down, _GroundCheckDistance, _GroundLayer);
+        _GroundAhead = Physics2D.Raycast(point, Vector2.down, _GroundCheckDistance, _GroundLayer);
     }
 
     private void SetDirections()
     {
+        if (!IsGrounded) return;
         if (State.Chase == _CurrentState)
+        {
             _Dir = _ChaseDir;
+        }
         else
         {
-            if (WallAhead() || !GroundAhead())
+            if (_WallAhead || !_GroundAhead)
                 _Dir *= -1;
         }
     }
@@ -102,18 +118,8 @@ public class WanderingHusk : EnemyBase
 
     private void Move()
     {
+        if (!IsGrounded || _TooCloseToTarget) return;
         float speed = _CurrentState == State.Patrol ? _WalkSpeed : _ChaseSpeed;
-        Vector2 vel = speed * _Dir * Time.fixedDeltaTime * Vector2.right;
-        _Rigidbody.MovePosition(_Rigidbody.position + vel);
-    }
-
-    private void FixedUpdate()
-    {
-        if (!CanMove || !_HealthSystem.IsAlive) return;
-
-        SetState();
-        SetDirections();
-        Move();
-        _Renderer.flipX = _Dir < 0;
+        _Rigidbody.linearVelocityX = speed * _Dir;
     }
 }

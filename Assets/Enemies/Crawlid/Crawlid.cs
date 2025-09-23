@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Crawlid : EnemyBase
 {
-    [SerializeField] private float _StunnedTime = 0.5f;
     [SerializeField] private float _WalkSpeed = 1.2f;
     [Space(5)]
     [SerializeField] private Vector2 _Offset;
@@ -12,7 +11,10 @@ public class Crawlid : EnemyBase
     [SerializeField] private float _SideCheckDistance;
     [SerializeField] private LayerMask _GroundLayer;
 
-    bool CanMove => Time.time - _LastHitTime > _StunnedTime;
+    private bool _WallAhead = false;
+    private bool _GroundAhead = false;
+    private bool IsGrounded => _Rigidbody.IsTouchingLayers(_GroundLayer);
+
     int _Dir = 1;
 
     override public void Start()
@@ -32,31 +34,29 @@ public class Crawlid : EnemyBase
         Gizmos.DrawLine(point, point + Vector2.down * _GroundCheckDistance);
     }
 
+    private void CheckCollisions()
+    {
+        Vector2 point = _Rigidbody.position + _Offset;
+        _WallAhead = Physics2D.Raycast(point, Vector2.right * _Dir, _SideCheckDistance, _GroundLayer);
+
+        point += _Dir * _SideCheckDistance * Vector2.right;
+        _GroundAhead = Physics2D.Raycast(point, Vector2.down, _GroundCheckDistance, _GroundLayer);
+    }
+
     private void UpdateDirection()
     {
-        Vector2 point = (Vector2)transform.position + _Offset;
-        // check sides
-        if (Physics2D.Raycast(point, Vector2.right * _Dir, _SideCheckDistance, _GroundLayer))
-        {
-            _Dir *= -1;
-            return;
-        }
-        // check ground ending in forward direction
-        point += _Dir * _SideCheckDistance * Vector2.right;
-        if (!Physics2D.Raycast(point, Vector2.down, _GroundCheckDistance, _GroundLayer))
+        if (!IsGrounded) return;
+        if (_WallAhead || !_GroundAhead)
             _Dir *= -1;
     }
 
-    private void Move()
-    {
-        Vector2 vel = _WalkSpeed * _Dir * Time.fixedDeltaTime * Vector2.right;
-        _Rigidbody.MovePosition(_Rigidbody.position + vel);
-    }
+    private void Move() => _Rigidbody.linearVelocityX = _WalkSpeed * _Dir;
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (!CanMove || !_HealthSystem.IsAlive) return;
 
+        CheckCollisions();
         UpdateDirection();
         Move();
         _Renderer.flipX = _Dir < 0;

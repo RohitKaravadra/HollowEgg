@@ -2,6 +2,14 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+public interface IDamageable
+{
+    int Health { get; }
+    void TakeDamage(int damage);
+    void Heal(int amount);
+    void Reset();
+}
+
 [System.Serializable]
 public class HealthSystem : MonoBehaviour, IDamageable
 {
@@ -9,13 +17,14 @@ public class HealthSystem : MonoBehaviour, IDamageable
     public UnityEvent OnHit;
     public UnityEvent OnDeath;
 
-    float _Health;
+    int _Health;
 
     public bool IsAlive => _Health > 0;
-    public float Health => _Health;
-    public void Heal(float amount) => _Health = Mathf.Min(_MaxHealth, _Health + amount);
+    public int Health => _Health;
+    public int MaxHealth => _MaxHealth;
+    public void Heal(int amount) => _Health = Mathf.Min(_MaxHealth, _Health + amount);
     public void Reset() => _Health = _MaxHealth;
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
         if (!IsAlive)
             return;

@@ -5,6 +5,7 @@ public class Consumable : MonoBehaviour
 {
     [SerializeField] bool _IsDoubleJump;
     [SerializeField] bool _IsDash;
+    [SerializeField] AudioSource _PickupSound;
     [Space(5)]
     [SerializeField] Transform _Orb;
 
@@ -19,6 +20,7 @@ public class Consumable : MonoBehaviour
     {
         _Orb.gameObject.SetActive(false);
         _Collider.enabled = false;
+        _PickupSound.Play();
     }
 
     public void OnReset()

@@ -12,20 +12,26 @@ public class UIManager : MonoBehaviour
     [Space(5)]
     [SerializeField] GameObject _MainPanel;
     [SerializeField] GameObject _PausePanel;
+    [SerializeField] GameObject _GameOverPanel;
     [SerializeField] OptionsPanel _OptionsPanel;
+    [Space(5)]
+    [SerializeField] HealthBar _HealthBar;
+
+    public static System.Action<int, int> OnHealthUpdate;
 
     enum Panels
     {
         None,
         Pause,
-        Options
+        Options,
+        GameOver
     }
 
     Panels _CurrentPanel;
 
     private void Awake()
     {
-        _CurrentPanel = Panels.None;
+        SetPanel(Panels.None);
         _MainPanel.SetActive(false);
     }
 
@@ -35,6 +41,9 @@ public class UIManager : MonoBehaviour
         if (_OptionsButton != null) _OptionsButton.onClick.AddListener(OptionsPanel);
         if (_QuitButton != null) _QuitButton.onClick.AddListener(QuitButton);
         if (_CrossButton != null) _CrossButton.onClick.AddListener(OnCancel);
+        GameManager.OnBossDeathTriggered += GameOver;
+
+        OnHealthUpdate += _HealthBar.SetHealth;
         if (InputManager.HasInstance)
         {
             InputManager.Instance.UI.Cancel.performed += ctx => OnCancel();
@@ -47,6 +56,9 @@ public class UIManager : MonoBehaviour
         if (_OptionsButton != null) _OptionsButton.onClick.RemoveListener(OptionsPanel);
         if (_QuitButton != null) _QuitButton.onClick.RemoveListener(QuitButton);
         if (_CrossButton != null) _CrossButton.onClick.RemoveListener(OnCancel);
+        GameManager.OnBossDeathTriggered -= GameOver;
+
+        OnHealthUpdate -= _HealthBar.SetHealth;
         if (InputManager.HasInstance)
         {
             InputManager.Instance.UI.Cancel.performed -= ctx => OnCancel();
@@ -58,7 +70,8 @@ public class UIManager : MonoBehaviour
         _CurrentPanel = panel;
         _PausePanel.SetActive(panel == Panels.Pause);
         _OptionsPanel.Enabled = panel == Panels.Options;
-        _MainPanel.SetActive(panel != Panels.None);
+        _MainPanel.SetActive(panel != Panels.None && panel != Panels.GameOver);
+        _GameOverPanel.SetActive(panel == Panels.GameOver);
         _CrossButton.gameObject.SetActive(panel != Panels.None);
     }
 
@@ -78,6 +91,8 @@ public class UIManager : MonoBehaviour
 
     private void OnCancel()
     {
+        if (_CurrentPanel == Panels.GameOver) return;
+
         switch (_CurrentPanel)
         {
             case Panels.None:
@@ -97,6 +112,19 @@ public class UIManager : MonoBehaviour
     private void OptionsPanel() => SetPanel(Panels.Options);
 
     private void QuitButton()
+    {
+        Time.timeScale = 1;
+        InputManager.Instance.SetPlayerInput(false);
+        SceneManager.LoadScene(0);
+    }
+
+    private void GameOver()
+    {
+        InputManager.Instance.SetPlayerInput(false);
+        SetPanel(Panels.GameOver);
+    }
+
+    public void BackToMenu()
     {
         Time.timeScale = 1;
         InputManager.Instance.SetPlayerInput(false);

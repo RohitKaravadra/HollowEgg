@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8463977245501750730}
   - component: {fileID: 6245240092007872988}
+  - component: {fileID: 4722547088967236044}
   - component: {fileID: 2353217332355930048}
   - component: {fileID: 3177679251853494519}
   - component: {fileID: 7666351972505792539}
   - component: {fileID: 6575069681612304490}
-  - component: {fileID: 4722547088967236044}
   m_Layer: 7
   m_Name: False Knight
   m_TagString: Enemy
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9d8b12bf0bf0b24389f01c63f23473c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _LoopEnabled: 1
+  _InAction: 0
   _StateLoop:
   - state: 0
     duration: 5
@@ -71,7 +71,7 @@ MonoBehaviour:
     timer: 2
   _JumpForce: 6
   _Gravity: 20
-  _JumpAttackTime: 0.5
+  _AttackAnimTime: 1
   _SlideMovement:
     <maxIterations>k__BackingField: 4
     <surfaceSlideAngle>k__BackingField: 45
@@ -107,6 +107,25 @@ MonoBehaviour:
     magnitude: 3
     frequency: 1
     time: 0.5
+--- !u!114 &4722547088967236044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4970968841242419024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff624b61711e3f248807f1b4b3b04f85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _MaxHealth: 50
+  OnHit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!212 &2353217332355930048
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -248,22 +267,3 @@ CapsuleCollider2D:
   m_Offset: {x: -0.09247208, y: 1.37}
   m_Size: {x: 3.9247208, y: 3.9247208}
   m_Direction: 0
---- !u!114 &4722547088967236044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4970968841242419024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff624b61711e3f248807f1b4b3b04f85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _MaxHealth: 50
-  OnHit:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []

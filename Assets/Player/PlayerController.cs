@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ShakeData _CameraShake;
     [Space(10)]
     [SerializeField] PlayerAttack _PlayerAttack;
+    [SerializeField] PlayerAudio _PlayerAudio;
     [SerializeField] CapsuleCollider2D _Collider;
     [SerializeField] Animator _Animator;
     [SerializeField] Transform _Visuals;
@@ -90,17 +91,19 @@ public class PlayerController : MonoBehaviour
     {
         _Rb = GetComponent<Rigidbody2D>();
         _HealthSystem = GetComponent<HealthSystem>();
-        _HealthSystem.Reset();
+
         EnemySharedData._PlayerTransform = transform;
         if (HasCollider) _Collider.isTrigger = _UseTriggerColliders;
     }
 
     private void Start()
     {
-        _CheckpointPos = transform.position;
         SetData();
-        if (CameraManager.HasInstance)
-            CameraManager.Instance.FollowTarget = transform;
+
+        if (CameraManager.HasInstance) CameraManager.Instance.FollowTarget = transform;
+
+        _HealthSystem.Reset();
+        UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
     }
 
     private void OnEnable()
@@ -144,6 +147,9 @@ public class PlayerController : MonoBehaviour
         UpdateMovement(Time.deltaTime);     // update movement velocities
         SetAnimations();                    // set animation states
         SetVisuals();                       // set player visuals
+
+        if (_IsGrounded && _IsMoving)
+            _PlayerAudio.PlayFootStep();
     }
 
     private void FixedUpdate() => Move(Time.fixedDeltaTime);  // apply movement
@@ -169,16 +175,13 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Danger"))
+            ApplyDamage(100);
+        else if (collision.CompareTag("Checkpoint"))
         {
-            OnDeath();
-            if (CameraManager.HasInstance)
-                CameraManager.Instance.ApplyShake(_CameraShake);
-        }
-
-        if (collision.CompareTag("Checkpoint"))
             OnCheckPoint(collision.transform.position);
-
-        if (collision.CompareTag("Consumable"))
+            Checkpoint.OnCheckpointHit?.Invoke(collision.transform);
+        }
+        else if (collision.CompareTag("Consumable"))
         {
             if (collision.TryGetComponent(out Consumable ability))
             {
@@ -193,11 +196,14 @@ public class PlayerController : MonoBehaviour
     {
         if (IsInvincible || !IsAlive) return;
         if (collision.CompareTag("Enemy"))
-            ApplyHitReaction(collision.transform.position);
+            OnHit(collision.transform.position);
     }
 
     private void SetData()
     {
+        // set initial checkpoint
+        _CheckpointPos = transform.position;
+
         // inititalize variables
         _XDirection = 1;
         _Velocity = Vector2.zero;
@@ -340,6 +346,8 @@ public class PlayerController : MonoBehaviour
 
         if (_Animator != null)
             _Animator.SetBool("Dash", true);
+
+        _PlayerAudio.PlayDash();
     }
 
     void ResetDash()
@@ -380,6 +388,7 @@ public class PlayerController : MonoBehaviour
             if (_Animator != null)
                 _Animator.SetTrigger("Attack");
 
+            _PlayerAudio.PlaySlash();
             if (_PlayerAttack.Attack(transform.position, ComputeAttackDir()))
             {
                 if (CameraManager.HasInstance)
@@ -413,6 +422,9 @@ public class PlayerController : MonoBehaviour
 
             if (wasGrounded && !_IsGrounded)
                 _LastGroundTime = Time.time;
+
+            if (!wasGrounded && _IsGrounded)
+                _PlayerAudio.PlayLand();
         }
     }
 
@@ -434,19 +446,27 @@ public class PlayerController : MonoBehaviour
         return force;
     }
 
-    private void ApplyHitReaction(Vector2 hitPos)
+    private void ApplyDamage(int damage)
+    {
+        if (IsInvincible) return;
+        if (_HealthSystem != null)
+        {
+            _HealthSystem.TakeDamage(damage);
+            UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
+        }
+        if (CameraManager.Instance)
+            CameraManager.Instance.ApplyShake(_CameraShake);
+    }
+
+    private void OnHit(Vector2 hitPos)
     {
         if (IsInvincible) return;
 
-        if (_HealthSystem != null)
-            _HealthSystem.TakeDamage(1);
+        ApplyDamage(1);
 
         Vector2 dir = ((Vector2)transform.position - hitPos).normalized;
         _DamageResponseForce += dir * _DamageForce;
         _lastHitTime = Time.time;
-
-        if (CameraManager.Instance)
-            CameraManager.Instance.ApplyShake(_CameraShake);
     }
 
     private void OnDeath()
@@ -461,6 +481,7 @@ public class PlayerController : MonoBehaviour
     private void OnRespawn()
     {
         _HealthSystem.Reset();
+        UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
 
         _Rb.simulated = false;
         transform.position = _CheckpointPos;
