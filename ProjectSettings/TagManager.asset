@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Danger
+  - Enemy
+  - Checkpoint
+  - Consumable
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Ignore Player Collision
+  - Water
+  - UI
+  - Player
+  - Enemy
+  - Camera
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Background
+    uniqueID: 1140252969
+    locked: 0
+  - name: Background Objects
+    uniqueID: 1379175111
+    locked: 0
+  - name: Enemy
+    uniqueID: 928923775
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Foreground Objects
+    uniqueID: 1479295305
+    locked: 0
+  - name: Foreground
+    uniqueID: 417782957
+    locked: 0
+  m_RenderingLayers:
+  - Default
