@@ -1,0 +1,1079 @@
+fileFormatVersion: 2
+guid: b6784758049fc994083b1406b2ff9d24
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 175099985092075329
+    second: HollowEGG_logo_new_0
+  - first:
+      213: -7509182897412146981
+    second: HollowEGG_logo_new_1
+  - first:
+      213: 6480039162123169725
+    second: HollowEGG_logo_new_2
+  - first:
+      213: -5915283889731313760
+    second: HollowEGG_logo_new_3
+  - first:
+      213: -358001806841210234
+    second: HollowEGG_logo_new_4
+  - first:
+      213: -769515288798322521
+    second: HollowEGG_logo_new_5
+  - first:
+      213: 4326863079429113070
+    second: HollowEGG_logo_new_6
+  - first:
+      213: 7114714930350477680
+    second: HollowEGG_logo_new_7
+  - first:
+      213: -4329525942501644056
+    second: HollowEGG_logo_new_8
+  - first:
+      213: -5114422664743199692
+    second: HollowEGG_logo_new_9
+  - first:
+      213: -179751777987273699
+    second: HollowEGG_logo_new_10
+  - first:
+      213: -7901261426231112685
+    second: HollowEGG_logo_new_11
+  - first:
+      213: -4825226407560588576
+    second: HollowEGG_logo_new_12
+  - first:
+      213: -7405759165172500117
+    second: HollowEGG_logo_new_13
+  - first:
+      213: -7048951908015197069
+    second: HollowEGG_logo_new_14
+  - first:
+      213: 706534166768304541
+    second: HollowEGG_logo_new_15
+  - first:
+      213: 148534934695007362
+    second: HollowEGG_logo_new_16
+  - first:
+      213: 2175606864582069683
+    second: HollowEGG_logo_new_17
+  - first:
+      213: -947884132163855345
+    second: HollowEGG_logo_new_18
+  - first:
+      213: 4138788665792340288
+    second: HollowEGG_logo_new_19
+  - first:
+      213: -7279397549186617572
+    second: HollowEGG_logo_new_20
+  - first:
+      213: 2841001704920740716
+    second: HollowEGG_logo_new_21
+  - first:
+      213: -7590367119844969316
+    second: HollowEGG_logo_new_22
+  - first:
+      213: -4386771839593518362
+    second: HollowEGG_logo_new_23
+  - first:
+      213: -6204491603038478499
+    second: HollowEGG_logo_new_24
+  - first:
+      213: -5262716868913809810
+    second: HollowEGG_logo_new_25
+  - first:
+      213: -2034270315837814829
+    second: HollowEGG_logo_new_26
+  - first:
+      213: -3718321948979314839
+    second: HollowEGG_logo_new_27
+  - first:
+      213: 1178113663602161865
+    second: HollowEGG_logo_new_28
+  - first:
+      213: 340511030494442852
+    second: HollowEGG_logo_new_29
+  - first:
+      213: -1547261106454423716
+    second: HollowEGG_logo_new_30
+  - first:
+      213: -7860744932365428425
+    second: HollowEGG_logo_new_31
+  - first:
+      213: -1841086046914030874
+    second: HollowEGG_logo_new_32
+  - first:
+      213: -6839672921686524126
+    second: HollowEGG_logo_new_33
+  - first:
+      213: 5137742310869464676
+    second: HollowEGG_logo_new_34
+  - first:
+      213: -6319947564662241413
+    second: HollowEGG_logo_new_35
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_0
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 430
+        width: 581
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14fd69b32841e6200800000000000000
+      internalID: 175099985092075329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_1
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 288
+        width: 83
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd87f4ea0f50ac790800000000000000
+      internalID: -7509182897412146981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_2
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 301
+        width: 67
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbfa8f40949bde950800000000000000
+      internalID: 6480039162123169725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_3
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 297
+        width: 63
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0af59fe84a0b8eda0800000000000000
+      internalID: -5915283889731313760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_4
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 297
+        width: 62
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68a1842e04f180bf0800000000000000
+      internalID: -358001806841210234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_5
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 301
+        width: 67
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a0a1f10ce12255f0800000000000000
+      internalID: -769515288798322521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_6
+      rect:
+        serializedVersion: 2
+        x: 473
+        y: 292
+        width: 110
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee40029cb0b1c0c30800000000000000
+      internalID: 4326863079429113070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_7
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 300
+        width: 72
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07155b5a88b8cb260800000000000000
+      internalID: 7114714930350477680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_8
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 294
+        width: 85
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e8e957181f6ae3c0800000000000000
+      internalID: -4329525942501644056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_9
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 294
+        width: 85
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43c56cc0fabe509b0800000000000000
+      internalID: -5114422664743199692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_10
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 220
+        width: 23
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1cd255d5b4618df0800000000000000
+      internalID: -179751777987273699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_11
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 220
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c8ff37894195290800000000000000
+      internalID: -7901261426231112685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_12
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 220
+        width: 15
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e25480c52a590db0800000000000000
+      internalID: -4825226407560588576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_13
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 220
+        width: 22
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b69bcc3d645793990800000000000000
+      internalID: -7405759165172500117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_14
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 220
+        width: 7
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37431fb26971d2e90800000000000000
+      internalID: -7048951908015197069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_15
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 220
+        width: 8
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d91c6efc41d1ec900800000000000000
+      internalID: 706534166768304541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_16
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 211
+        width: 43
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2845b337cb3bf0200800000000000000
+      internalID: 148534934695007362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_17
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 211
+        width: 23
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bdc05e9aee413e10800000000000000
+      internalID: 2175606864582069683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_18
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 220
+        width: 19
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0cd426676078d2f0800000000000000
+      internalID: -947884132163855345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_19
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 220
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04127f00d5eef6930800000000000000
+      internalID: 4138788665792340288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_20
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 220
+        width: 13
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1fe1e53f726afa90800000000000000
+      internalID: -7279397549186617572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_21
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 220
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6374149ff34d6720800000000000000
+      internalID: 2841001704920740716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_22
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 220
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c94f5dae15999a690800000000000000
+      internalID: -7590367119844969316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_23
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 220
+        width: 44
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ea6756014e0f13c0800000000000000
+      internalID: -4386771839593518362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_24
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 220
+        width: 22
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5f5ff482c735e9a0800000000000000
+      internalID: -6204491603038478499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_25
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 220
+        width: 15
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e66bfea04e217f6b0800000000000000
+      internalID: -5262716868913809810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_26
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 220
+        width: 13
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d78d5ffce1d4c3e0800000000000000
+      internalID: -2034270315837814829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_27
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 220
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96fbc8e43edd56cc0800000000000000
+      internalID: -3718321948979314839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_28
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 220
+        width: 14
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c87a089220895010800000000000000
+      internalID: 1178113663602161865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_29
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 220
+        width: 23
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46539b66afcb9b400800000000000000
+      internalID: 340511030494442852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_30
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 220
+        width: 14
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c57910fa836078ae0800000000000000
+      internalID: -1547261106454423716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_31
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 220
+        width: 43
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 739186cc12609e290800000000000000
+      internalID: -7860744932365428425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_32
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 220
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e2d2ccaef52376e0800000000000000
+      internalID: -1841086046914030874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_33
+      rect:
+        serializedVersion: 2
+        x: 745
+        y: 220
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22f340347b99411a0800000000000000
+      internalID: -6839672921686524126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_34
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 220
+        width: 31
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4667eda296dec4740800000000000000
+      internalID: 5137742310869464676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HollowEGG_logo_new_35
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 22
+        width: 910
+        height: 162
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b774639ac290b48a0800000000000000
+      internalID: -6319947564662241413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      HollowEGG_logo_new_0: 175099985092075329
+      HollowEGG_logo_new_1: -7509182897412146981
+      HollowEGG_logo_new_10: -179751777987273699
+      HollowEGG_logo_new_11: -7901261426231112685
+      HollowEGG_logo_new_12: -4825226407560588576
+      HollowEGG_logo_new_13: -7405759165172500117
+      HollowEGG_logo_new_14: -7048951908015197069
+      HollowEGG_logo_new_15: 706534166768304541
+      HollowEGG_logo_new_16: 148534934695007362
+      HollowEGG_logo_new_17: 2175606864582069683
+      HollowEGG_logo_new_18: -947884132163855345
+      HollowEGG_logo_new_19: 4138788665792340288
+      HollowEGG_logo_new_2: 6480039162123169725
+      HollowEGG_logo_new_20: -7279397549186617572
+      HollowEGG_logo_new_21: 2841001704920740716
+      HollowEGG_logo_new_22: -7590367119844969316
+      HollowEGG_logo_new_23: -4386771839593518362
+      HollowEGG_logo_new_24: -6204491603038478499
+      HollowEGG_logo_new_25: -5262716868913809810
+      HollowEGG_logo_new_26: -2034270315837814829
+      HollowEGG_logo_new_27: -3718321948979314839
+      HollowEGG_logo_new_28: 1178113663602161865
+      HollowEGG_logo_new_29: 340511030494442852
+      HollowEGG_logo_new_3: -5915283889731313760
+      HollowEGG_logo_new_30: -1547261106454423716
+      HollowEGG_logo_new_31: -7860744932365428425
+      HollowEGG_logo_new_32: -1841086046914030874
+      HollowEGG_logo_new_33: -6839672921686524126
+      HollowEGG_logo_new_34: 5137742310869464676
+      HollowEGG_logo_new_35: -6319947564662241413
+      HollowEGG_logo_new_4: -358001806841210234
+      HollowEGG_logo_new_5: -769515288798322521
+      HollowEGG_logo_new_6: 4326863079429113070
+      HollowEGG_logo_new_7: 7114714930350477680
+      HollowEGG_logo_new_8: -4329525942501644056
+      HollowEGG_logo_new_9: -5114422664743199692
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

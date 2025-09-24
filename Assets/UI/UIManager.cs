@@ -8,7 +8,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button _ResumeButton;
     [SerializeField] Button _OptionsButton;
     [SerializeField] Button _QuitButton;
-    [SerializeField] Button _CrossButton;
     [Space(5)]
     [SerializeField] GameObject _MainPanel;
     [SerializeField] GameObject _PausePanel;
@@ -40,7 +39,6 @@ public class UIManager : MonoBehaviour
         if (_ResumeButton != null) _ResumeButton.onClick.AddListener(Close);
         if (_OptionsButton != null) _OptionsButton.onClick.AddListener(OptionsPanel);
         if (_QuitButton != null) _QuitButton.onClick.AddListener(QuitButton);
-        if (_CrossButton != null) _CrossButton.onClick.AddListener(OnCancel);
         GameManager.OnBossDeathTriggered += GameOver;
 
         OnHealthUpdate += _HealthBar.SetHealth;
@@ -55,7 +53,6 @@ public class UIManager : MonoBehaviour
         if (_ResumeButton != null) _ResumeButton.onClick.RemoveListener(Close);
         if (_OptionsButton != null) _OptionsButton.onClick.RemoveListener(OptionsPanel);
         if (_QuitButton != null) _QuitButton.onClick.RemoveListener(QuitButton);
-        if (_CrossButton != null) _CrossButton.onClick.RemoveListener(OnCancel);
         GameManager.OnBossDeathTriggered -= GameOver;
 
         OnHealthUpdate -= _HealthBar.SetHealth;
@@ -72,7 +69,6 @@ public class UIManager : MonoBehaviour
         _OptionsPanel.Enabled = panel == Panels.Options;
         _MainPanel.SetActive(panel != Panels.None && panel != Panels.GameOver);
         _GameOverPanel.SetActive(panel == Panels.GameOver);
-        _CrossButton.gameObject.SetActive(panel != Panels.None);
     }
 
     private void Close()
@@ -123,6 +119,8 @@ public class UIManager : MonoBehaviour
         InputManager.Instance.SetPlayerInput(false);
         SetPanel(Panels.GameOver);
     }
+
+    public void CancelButton() => OnCancel();
 
     public void BackToMenu()
     {

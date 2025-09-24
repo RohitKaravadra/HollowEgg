@@ -112,11 +112,10 @@ public class PlayerController : MonoBehaviour
 
         if (InputManager.HasInstance)
         {
-            InputManager.Instance.Player.Jump.performed += ctx => OnJump(true);
-            InputManager.Instance.Player.Move.performed += ctx => OnMove(ctx.ReadValue<Vector2>());
-            InputManager.Instance.Player.Move.canceled += ctx => OnMove(Vector2.zero);
-            InputManager.Instance.Player.Attack.performed += ctx => Attack();
-            InputManager.Instance.Player.Sprint.performed += ctx => OnDash();
+            InputManager.Instance.BindPlayerAttack(Attack, true);
+            InputManager.Instance.BindPlayerDash(OnDash, true);
+            InputManager.Instance.BindPlayerJump(OnJump, true);
+            InputManager.Instance.BindPlayerMove(OnMove, true);
         }
 
         if (_HealthSystem != null)
@@ -129,11 +128,10 @@ public class PlayerController : MonoBehaviour
 
         if (InputManager.HasInstance)
         {
-            InputManager.Instance.Player.Jump.performed -= ctx => OnJump(true);
-            InputManager.Instance.Player.Move.performed -= ctx => OnMove(ctx.ReadValue<Vector2>());
-            InputManager.Instance.Player.Move.canceled -= ctx => OnMove(Vector2.zero);
-            InputManager.Instance.Player.Attack.performed -= ctx => Attack();
-            InputManager.Instance.Player.Sprint.performed -= ctx => OnDash();
+            InputManager.Instance.BindPlayerAttack(Attack, false);
+            InputManager.Instance.BindPlayerDash(OnDash, false);
+            InputManager.Instance.BindPlayerJump(OnJump, false);
+            InputManager.Instance.BindPlayerMove(OnMove, false);
         }
 
         if (_HealthSystem != null)
