@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a8a3099eaf76745ada5527a1e154f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _GodMode: 0
+  _GodMode: 1
   _MoveSpeed: 6
   _Acceleration: 30
   _MoveThreshold: 0.001
@@ -443,8 +443,8 @@ MonoBehaviour:
     time: 0.3
   _PlayerAttack:
     _AttackRate: 3
-    _AttackRange: {x: 2.5, y: 1}
-    _Offset: {x: 0.9, y: 0}
+    _AttackRange: {x: 2.5, y: 1.5}
+    _Offset: {x: 0.9, y: 0.1}
     _HittableLayers:
       serializedVersion: 2
       m_Bits: 179

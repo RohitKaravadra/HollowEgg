@@ -11,32 +11,51 @@ public class PlayerAttack
     private float _LastAttackTime;
     public bool CanAttack => Time.time - _LastAttackTime >= 1f / _AttackRate;
 
+    private Vector2 ComputeOffset(Vector2 dir)
+    {
+        // Adjust capsule orientation and offset
+        Vector2 offset = dir.y != 0 ? new Vector2(_Offset.y, _Offset.x) : _Offset;
+        offset.x *= dir.x == 0 ? 1 : dir.x;
+        offset.y *= dir.y == 0 ? 1 : dir.y;
+        return offset;
+    }
+
+    private Vector2 ComputeSize(Vector2 dir) => dir.y != 0 ?
+        new Vector2(_AttackRange.y, _AttackRange.x) : _AttackRange;
+
+
     public void OnDrawGizmos(Vector2 pos, Vector2 dir)
     {
-        Vector2 offset = dir.y != 0 ? new Vector2(_Offset.y, _Offset.x) : _Offset;
-        Vector2 size = dir.y != 0 ? new Vector2(_AttackRange.y, _AttackRange.x) : _AttackRange;
-        Vector2 point = pos + (offset * dir);
+        Vector2 offset = ComputeOffset(dir);
+        Vector2 size = ComputeSize(dir);
+
+        Vector2 point = pos + offset;
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(point, size);
     }
 
     private bool CheckHit(Vector2 pos, Vector2 dir)
     {
-        // Adjust capsule orientation and offset
-        Vector2 offset = dir.y != 0 ? new Vector2(_Offset.y, _Offset.x) : _Offset;
-        Vector2 size = dir.y != 0 ? new Vector2(_AttackRange.y, _AttackRange.x) : _AttackRange;
-        Vector2 point = pos + (offset * dir);
+        Vector2 offset = ComputeOffset(dir);
+        Vector2 size = ComputeSize(dir);
+
+        Vector2 point = pos + offset;
 
         // Perform overlap check
-        var hit = Physics2D.OverlapBox(point, size, 0, _HittableLayers);
+        var hits = Physics2D.OverlapBoxAll(point, size, 0, _HittableLayers);
 
-        if (hit && hit.TryGetComponent<IDamageable>(out var damageable))
+        bool hitSomething = false;
+        foreach (var hit in hits)
         {
-            damageable.TakeDamage(1); // << typo? should be Damage?
-            return true;
+            if (hit && hit.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(1); // << typo? should be Damage?
+                hitSomething = true;
+            }
         }
 
-        return false;
+        return hitSomething;
     }
 
     public bool Attack(Vector2 pos, Vector2 dir)

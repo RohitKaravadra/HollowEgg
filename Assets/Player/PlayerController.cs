@@ -412,7 +412,7 @@ public class PlayerController : MonoBehaviour
             if (!_IsGrounded || !_HitResults[0].transform.TryGetComponent(out _Ground))
                 _Ground = null;
 
-            if (Physics2D.CapsuleCast(pos, _Collider.size, _Collider.direction, 0, Vector2.up, _GroundFilter, _HitResults, _CellingDistance) > 0)
+            if (Physics2D.CapsuleCast(pos, _Collider.size * 0.9f, _Collider.direction, 0, Vector2.up, _GroundFilter, _HitResults, _CellingDistance) > 0)
                 _IsCeilingAbove = _Velocity.y > 0 && _HitResults[0].point.y > transform.position.y; // head collision
 
             _IsWallAhead = Physics2D.CapsuleCast(pos, _Collider.size * 0.9f, _Collider.direction, 0, Vector2.right * _XDirection,
