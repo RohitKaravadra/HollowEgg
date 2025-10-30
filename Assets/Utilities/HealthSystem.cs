@@ -14,7 +14,7 @@ public interface IDamageable
 public class HealthSystem : MonoBehaviour, IDamageable
 {
     [SerializeField] int _MaxHealth = 100;
-    public UnityEvent OnHit;
+    public UnityEvent OnDamage;
     public UnityEvent OnDeath;
 
     int _Health;
@@ -30,7 +30,10 @@ public class HealthSystem : MonoBehaviour, IDamageable
             return;
 
         _Health = Mathf.Max(0, _Health - damage);
-        OnHit?.Invoke();
-        if (!IsAlive) OnDeath?.Invoke();
+
+        if (IsAlive)
+            OnDamage?.Invoke();
+        else
+            OnDeath?.Invoke();
     }
 }

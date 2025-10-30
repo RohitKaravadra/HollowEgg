@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] Button _ResumeButton;
     [SerializeField] Button _OptionsButton;
-    [SerializeField] Button _QuitButton;
+    [SerializeField] Button _MainMenuButton;
     [Space(5)]
     [SerializeField] GameObject _MainPanel;
     [SerializeField] GameObject _PausePanel;
@@ -36,10 +36,15 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_ResumeButton != null) _ResumeButton.onClick.AddListener(Close);
-        if (_OptionsButton != null) _OptionsButton.onClick.AddListener(OptionsPanel);
-        if (_QuitButton != null) _QuitButton.onClick.AddListener(QuitButton);
+        if (_ResumeButton != null)
+            _ResumeButton.onClick.AddListener(OnResumeButton);
+        if (_OptionsButton != null)
+            _OptionsButton.onClick.AddListener(OptionsPanel);
+        if (_MainMenuButton != null)
+            _MainMenuButton.onClick.AddListener(MainMenuButton);
+
         GameManager.OnBossDeathTriggered += GameOver;
+        GameManager.OnGamePaused += OnGamePaused;
 
         OnHealthUpdate += _HealthBar.SetHealth;
         if (InputManager.HasInstance)
@@ -50,10 +55,15 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
-        if (_ResumeButton != null) _ResumeButton.onClick.RemoveListener(Close);
-        if (_OptionsButton != null) _OptionsButton.onClick.RemoveListener(OptionsPanel);
-        if (_QuitButton != null) _QuitButton.onClick.RemoveListener(QuitButton);
+        if (_ResumeButton != null)
+            _ResumeButton.onClick.RemoveListener(OnResumeButton);
+        if (_OptionsButton != null)
+            _OptionsButton.onClick.RemoveListener(OptionsPanel);
+        if (_MainMenuButton != null)
+            _MainMenuButton.onClick.RemoveListener(MainMenuButton);
+
         GameManager.OnBossDeathTriggered -= GameOver;
+        GameManager.OnGamePaused -= OnGamePaused;
 
         OnHealthUpdate -= _HealthBar.SetHealth;
         if (InputManager.HasInstance)
@@ -71,31 +81,28 @@ public class UIManager : MonoBehaviour
         _GameOverPanel.SetActive(panel == Panels.GameOver);
     }
 
-    private void Close()
-    {
-        Time.timeScale = 1;
-        InputManager.Instance.SetPlayerInput(true);
-        SetPanel(Panels.None);
-    }
+    private void OnResumeButton() => GameManager.OnGamePaused?.Invoke(false);
 
-    private void Open()
+    private void OnGamePaused(bool paused)
     {
-        Time.timeScale = 0;
-        InputManager.Instance.SetPlayerInput(false);
-        SetPanel(Panels.Pause);
+        if (paused)
+            SetPanel(Panels.Pause);
+        else
+            SetPanel(Panels.None);
     }
 
     private void OnCancel()
     {
-        if (_CurrentPanel == Panels.GameOver) return;
+        if (_CurrentPanel == Panels.GameOver)
+            return;
 
         switch (_CurrentPanel)
         {
             case Panels.None:
-                Open();
+                GameManager.OnGamePaused?.Invoke(true);
                 break;
             case Panels.Pause:
-                Close();
+                GameManager.OnGamePaused?.Invoke(false);
                 break;
             case Panels.Options:
                 SetPanel(Panels.Pause);
@@ -107,12 +114,7 @@ public class UIManager : MonoBehaviour
 
     private void OptionsPanel() => SetPanel(Panels.Options);
 
-    private void QuitButton()
-    {
-        Time.timeScale = 1;
-        InputManager.Instance.SetPlayerInput(false);
-        SceneManager.LoadScene(0);
-    }
+    private void MainMenuButton() => SceneManager.LoadScene(0);
 
     private void GameOver()
     {
@@ -124,7 +126,7 @@ public class UIManager : MonoBehaviour
 
     public void BackToMenu()
     {
-        Time.timeScale = 1;
+        GameManager.OnGamePaused?.Invoke(false);
         InputManager.Instance.SetPlayerInput(false);
         SceneManager.LoadScene(0);
     }

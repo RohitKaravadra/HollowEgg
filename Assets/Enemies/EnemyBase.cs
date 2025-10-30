@@ -33,10 +33,10 @@ public abstract class EnemyBase : MonoBehaviour
         if (_HealthSystem != null)
         {
             _HealthSystem.OnDeath.AddListener(OnDeath);
-            _HealthSystem.OnHit.AddListener(OnHit);
+            _HealthSystem.OnDamage.AddListener(OnHit);
         }
 
-        GameManager.OnResetEnemies += Reset;
+        GameManager.OnResetEnemies += ResetEnemy;
     }
 
     public virtual void OnDisable()
@@ -44,10 +44,10 @@ public abstract class EnemyBase : MonoBehaviour
         if (_HealthSystem != null)
         {
             _HealthSystem.OnDeath.RemoveListener(OnDeath);
-            _HealthSystem.OnHit.RemoveListener(OnHit);
+            _HealthSystem.OnDamage.RemoveListener(OnHit);
         }
 
-        GameManager.OnResetEnemies -= Reset;
+        GameManager.OnResetEnemies -= ResetEnemy;
     }
 
     private void OnDestroy() => CancelInvoke();
@@ -71,7 +71,7 @@ public abstract class EnemyBase : MonoBehaviour
         Invoke(nameof(ResetColor), 0.1f);
     }
 
-    protected virtual void Reset()
+    protected virtual void ResetEnemy()
     {
         if (_Rigidbody != null) _Rigidbody.simulated = false;
         transform.position = _InitPosition;

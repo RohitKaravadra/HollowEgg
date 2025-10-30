@@ -107,7 +107,7 @@ Transform:
   m_GameObject: {fileID: 2541890062423994050}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00000047683716, y: 2.1299999, z: -15}
+  m_LocalPosition: {x: 0, y: 2.1300004, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -208,7 +208,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -216,6 +215,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!114 &4024931138157650755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +548,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 1
   m_CompositeOrder: 0
-  m_Offset: {x: 13.214409, y: 2.755868}
+  m_Offset: {x: 14.156425, y: 2.755868}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -558,7 +558,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 28.571182, y: 27.488264}
+  m_Size: {x: 30.455215, y: 27.488264}
   m_EdgeRadius: 0
 --- !u!1 &6556188264849589457
 GameObject:
@@ -569,7 +569,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8226481888591192332}
-  - component: {fileID: 6087992971874592368}
   - component: {fileID: 5382343764007329166}
   - component: {fileID: 8535442448209266306}
   - component: {fileID: 4798235588748461879}
@@ -596,18 +595,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5765728094641190993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6087992971874592368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6556188264849589457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a8a05de0ac134f4f9d01bef6b9da077, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5382343764007329166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,8 +699,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoundingShape2D: {fileID: 1937091655279336585}
-  Damping: 0.5
-  SlowingDistance: 3
+  Damping: 0
+  SlowingDistance: 0
   OversizeWindow:
     Enabled: 0
     MaxWindowSize: 0
@@ -785,7 +772,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 1
   m_CompositeOrder: 0
-  m_Offset: {x: 1.7144089, y: -0.24413204}
+  m_Offset: {x: 2.0088882, y: 0.75586796}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -795,7 +782,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 33.571182, y: 17.488264}
+  m_Size: {x: 32.982224, y: 17.488264}
   m_EdgeRadius: 0
 --- !u!1 &8122160601668903510
 GameObject:
@@ -924,24 +911,24 @@ CompositeCollider2D:
         Y: -355000000
   - m_Collider: {fileID: 5426884360876127277}
     m_ColliderPaths:
-    - - X: 1910000000
+    - - X: 1928840320
         Y: -80000000
       - X: 1624288128
         Y: -80000000
       - X: 1624288128
         Y: -354882656
-      - X: 1910000000
+      - X: 1928840320
         Y: -354882656
   - m_Collider: {fileID: 8433562088622516899}
     m_ColliderPaths:
     - - X: 2260000000
-        Y: -125000000
-      - X: 1924288128
-        Y: -125000000
-      - X: 1924288128
-        Y: -299882656
+        Y: -115000000
+      - X: 1930177792
+        Y: -115000000
+      - X: 1930177792
+        Y: -289882656
       - X: 2260000000
-        Y: -299882656
+        Y: -289882656
   - m_Collider: {fileID: 5220475564792225627}
     m_ColliderPaths:
     - - X: 1270000000
@@ -966,8 +953,8 @@ CompositeCollider2D:
     m_Paths:
     - - {x: 163.99997, y: -35.5}
       - {x: 164.00003, y: -35.488266}
-      - {x: 191, y: -35.488235}
-      - {x: 190.99997, y: -8}
+      - {x: 192.88403, y: -35.488235}
+      - {x: 192.884, y: -8}
       - {x: 164, y: -7.9999704}
       - {x: 163.99997, y: 16.5}
       - {x: 39, y: 16.499971}
@@ -980,10 +967,10 @@ CompositeCollider2D:
       - {x: 91, y: -14.4999695}
       - {x: 91.00003, y: -6.500001}
       - {x: 127, y: -6.5000305}
-    - - {x: 225.99997, y: -29.988266}
-      - {x: 225.99997, y: -12.5}
-      - {x: 192.42882, y: -12.50003}
-      - {x: 192.42885, y: -29.988266}
+    - - {x: 225.99997, y: -28.988266}
+      - {x: 225.99997, y: -11.5}
+      - {x: 193.01778, y: -11.50003}
+      - {x: 193.0178, y: -28.988266}
     - - {x: 112, y: -30.499968}
       - {x: 72, y: -30.499968}
       - {x: 72.00003, y: -15.500002}
@@ -1041,6 +1028,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _FollowCamera: {fileID: 5382343764007329166}
   _DisableShake: 0
+  _ShakeDistanceThreshold: 5
   _MagnitudeCurve:
     serializedVersion: 2
     m_Curve:

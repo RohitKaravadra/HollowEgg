@@ -10,6 +10,7 @@ public class FalseKnight : EnemyBase
         public float timer;
     }
 
+    // False Knight States
     enum State
     {
         Idle,
@@ -18,16 +19,24 @@ public class FalseKnight : EnemyBase
         SlashAttack
     }
 
+    #region Editor Properties
+
     [SerializeField] bool _InAction = false;
     [SerializeField] StateData[] _StateLoop;
     [SerializeField] float _JumpForce = 10f;
     [SerializeField] float _Gravity;
     [Space(5)]
     [SerializeField] float _AttackAnimTime = 1.0f;
+    [SerializeField] float _AttackDelay = 0.2f;
+    [SerializeField] Vector2 _AttackOffset;
+    [SerializeField] Vector2 _AttackSize;
+    [SerializeField] LayerMask _AttackLayer;
     [Space(5)]
     [SerializeField] Rigidbody2D.SlideMovement _SlideMovement;
     [SerializeField] ContactFilter2D _GroundFilter;
     [SerializeField] ShakeData _LandShake;
+
+    #endregion
 
     Collider2D _Collider;
     Transform _Target;
@@ -101,6 +110,21 @@ public class FalseKnight : EnemyBase
     {
         base.OnDisable();
         GameManager.OnBossFightTriggered -= () => InAction = true;
+
+        CancelInvoke(nameof(AttackDamage));
+        CancelInvoke(nameof(SetJump));
+        CancelInvoke(nameof(SetSlash));
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (Application.isPlaying)
+            return;
+
+        Gizmos.color = Color.red;
+        int dir = _TargetDir != 0 ? _TargetDir : 1;
+        Vector2 attackPos = (Vector2)transform.position + _AttackOffset * dir;
+        Gizmos.DrawWireCube(attackPos, _AttackSize);
     }
 
     private void Update()
@@ -139,12 +163,14 @@ public class FalseKnight : EnemyBase
             _Animator.SetFloat("SpeedY", _Velocity.y);
         }
 
-        if (_TargetDir != 0 && _Renderer != null) _Renderer.flipX = _TargetDir < 0;
+        if (_TargetDir != 0 && _Renderer != null)
+            _Renderer.flipX = _TargetDir < 0;
     }
 
     private void SetDirection()
     {
-        if (!HasTarget || !_IsGrounded) return;
+        if (!HasTarget || !_IsGrounded)
+            return;
 
         float diff = _Target.position.x - transform.position.x;
         diff = Mathf.Abs(diff) < 0.2f ? 0 : diff;
@@ -165,13 +191,14 @@ public class FalseKnight : EnemyBase
         bool wasGrounded = _IsGrounded;
         _IsGrounded = false;
 
-        if (_Velocity.y > 0) return;
+        if (_Velocity.y > 0)
+            return;
 
         RaycastHit2D[] hits = new RaycastHit2D[2];
         _IsGrounded = HasCollider && _Collider.Cast(Vector2.down, _GroundFilter, hits, 0.4f) > 0;
 
         if (!wasGrounded && _IsGrounded && CameraManager.HasInstance)
-            CameraManager.Instance.ApplyShake(_LandShake);
+            CameraManager.Instance.ApplyShake(_LandShake, transform.position);
     }
 
     Vector2 CalculateJumpVelocity(Vector2 start, Vector2 end, float height)
@@ -195,7 +222,8 @@ public class FalseKnight : EnemyBase
 
     private void UpdateState()
     {
-        if (!HasStates) return;
+        if (!HasStates)
+            return;
 
         _StateTimer += Time.deltaTime;
         switch (_StateLoop[_CurrentStateIndex].state)
@@ -217,7 +245,8 @@ public class FalseKnight : EnemyBase
 
     private void StartState()
     {
-        if (!HasStates) return;
+        if (!HasStates)
+            return;
         switch (_StateLoop[_CurrentStateIndex].state)
         {
             case State.Idle:
@@ -237,13 +266,38 @@ public class FalseKnight : EnemyBase
 
     private void NextState()
     {
-        if (!HasStates) return;
+        if (!HasStates)
+            return;
 
         _CurrentStateIndex = (_CurrentStateIndex + 1) % _StateLoop.Length;
         _StateTimer = 0f;
         StartState();
     }
 
+    private void AttackDamage()
+    {
+        int dir = _TargetDir != 0 ? _TargetDir : 1;
+        Vector2 attackPos = (Vector2)transform.position + _AttackOffset * dir;
+        Collider2D hit = Physics2D.OverlapBox(attackPos, _AttackSize, 0f, _AttackLayer);
+        if (hit != null && hit.TryGetComponent(out HealthSystem health))
+            health.TakeDamage(1);
+
+#if UNITY_EDITOR
+        // draw debug box
+        Debug.DrawLine(attackPos - _AttackSize / 2, attackPos + new Vector2(_AttackSize.x / 2, -_AttackSize.y / 2), Color.red, 0.2f);
+        Debug.DrawLine(attackPos - _AttackSize / 2, attackPos + new Vector2(-_AttackSize.x / 2, _AttackSize.y / 2), Color.red, 0.2f);
+        Debug.DrawLine(attackPos + _AttackSize / 2, attackPos + new Vector2(_AttackSize.x / 2, -_AttackSize.y / 2), Color.red, 0.2f);
+        Debug.DrawLine(attackPos + _AttackSize / 2, attackPos + new Vector2(-_AttackSize.x / 2, _AttackSize.y / 2), Color.red, 0.2f);
+#endif
+
+    }
+
+    private void Attack()
+    {
+        _Animator.SetTrigger("Attack");
+        CancelInvoke(nameof(AttackDamage));
+        Invoke(nameof(AttackDamage), _AttackDelay);
+    }
 
     private void SetSlash()
     {
@@ -262,16 +316,15 @@ public class FalseKnight : EnemyBase
         if (_IsGrounded && _IsSlashing)
         {
             _IsSlashing = false;
+            Attack();
             if (_MultipleSlashCount < maxJump)
             {
-                _Animator.SetTrigger("Attack");
                 _Velocity = Vector2.zero;
                 Invoke(nameof(SetSlash), _AttackAnimTime);
             }
             else
             {
                 _MultipleSlashCount = 0;
-                _Animator.SetTrigger("Attack");
                 NextState();
             }
         }
@@ -295,16 +348,15 @@ public class FalseKnight : EnemyBase
         if (_IsGrounded && _IsJumping)
         {
             _IsJumping = false;
+            Attack();
             if (_MultipleJumpCount < maxJump)
             {
-                _Animator.SetTrigger("Attack");
                 _Velocity = Vector2.zero;
                 Invoke(nameof(SetJump), _AttackAnimTime);
             }
             else
             {
                 _MultipleJumpCount = 0;
-                _Animator.SetTrigger("Attack");
                 NextState();
             }
         }
@@ -318,7 +370,7 @@ public class FalseKnight : EnemyBase
             NextState();
     }
 
-    protected override void Reset()
+    protected override void ResetEnemy()
     {
         CancelInvoke();
 
@@ -328,7 +380,7 @@ public class FalseKnight : EnemyBase
         _IsGrounded = true;
 
         _Velocity = Vector2.zero;
-        base.Reset();
+        base.ResetEnemy();
     }
 
     protected override void OnDeath()

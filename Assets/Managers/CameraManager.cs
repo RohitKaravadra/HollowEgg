@@ -15,6 +15,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] CinemachineCamera _FollowCamera;
     [Space(10)]
     [SerializeField] bool _DisableShake;
+    [SerializeField] float _ShakeDistanceThreshold = 5f;
     [SerializeField] AnimationCurve _MagnitudeCurve;
     [SerializeField] AnimationCurve _FrequencyCurve;
 
@@ -48,13 +49,21 @@ public class CameraManager : MonoBehaviour
             Instance = null;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Vector2 pos = _FollowCamera ? (Vector2)_FollowCamera.transform.position : (Vector2)transform.position;
+        Gizmos.DrawWireSphere(pos, _ShakeDistanceThreshold);
+    }
+
     /// <summary> Apply camera shake using noise </summary>\
     /// <param name="magnitude"> Magnitude of Noise </param>
     /// <param name="frequency"> Frequency of Noise (per sec)</param>
     /// <param name="time"> Timeperiod of Noise </param>
     public void ApplyShake(ShakeData data)
     {
-        if (_Noise == null || _DisableShake) return;
+        if (_Noise == null || _DisableShake)
+            return;
 
         _ShakeData = data;
         _CurTime = _ShakeData.time;
@@ -62,6 +71,16 @@ public class CameraManager : MonoBehaviour
         if (!_IsShaking)
             StartCoroutine(nameof(StartShake));
     }
+
+    public void ApplyShake(ShakeData data, Vector2 pos)
+    {
+        if (!_FollowCamera ||
+            Vector2.Distance(_FollowCamera.transform.position, pos) > _ShakeDistanceThreshold)
+            return;
+
+        ApplyShake(data);
+    }
+
     private IEnumerator StartShake()
     {
         _IsShaking = true;

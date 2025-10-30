@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -35,21 +35,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask _GroundLayers;
     [Space(10)]
     [SerializeField] float _InvincibilityTime = 0.5f;
+    [SerializeField] float _HitEffectTime = 0.1f;
+    [SerializeField] float _HitSlowTimeScale = 0.5f;
     [SerializeField] float _RespawnTime;
     [SerializeField] float _DamageForce;
     [SerializeField] ShakeData _CameraShake;
     [Space(10)]
     [SerializeField] PlayerAttack _PlayerAttack;
     [SerializeField] PlayerAudio _PlayerAudio;
-    [SerializeField] CapsuleCollider2D _Collider;
-    [SerializeField] Animator _Animator;
-    [SerializeField] Transform _Visuals;
+    [SerializeField] PlayerRagdoll _PlayerRagdoll;
 
     // Input variables
     Vector2 _MoveInput;
 
     Rigidbody2D _Rb;
     Rigidbody2D.SlideMovement _SlideData;
+    CapsuleCollider2D _Collider;
+    Animator _Animator;
+    SpriteRenderer _Visuals;
     HealthSystem _HealthSystem;
 
     ContactFilter2D _GroundFilter;
@@ -70,7 +73,7 @@ public class PlayerController : MonoBehaviour
     bool _IsCeilingAbove;
     bool _IsWallAhead;
 
-    float _lastHitTime;
+    float _lastDamageTime;
 
     private bool DashEnabled { get; set; }
     private bool DoubleJumpEnabled { get; set; }
@@ -78,9 +81,10 @@ public class PlayerController : MonoBehaviour
     bool CanDash => (_GodMode || DashEnabled) && _MoveInput.x != 0 && Time.time - _LastDashTime > _DashCooldown;
     bool CanAttack => _PlayerAttack != null && _PlayerAttack.CanAttack && !_IsDashing;
     bool IsCoyote => !_IsJumping && Time.time - _LastGroundTime < _CoyoteTime;
-    bool HasCollider => _Collider != null;
-    bool IsInvincible => _GodMode || _IsDashing || Time.time - _lastHitTime < _InvincibilityTime;
+    bool IsInvincible => _GodMode || _IsDashing || Time.time - _lastDamageTime < _InvincibilityTime;
     public bool IsAlive => _HealthSystem != null && _HealthSystem.IsAlive;
+
+    public int Health => throw new System.NotImplementedException();
 
     int _XDirection = 1;
     Vector2 _Velocity = Vector2.zero;
@@ -91,16 +95,25 @@ public class PlayerController : MonoBehaviour
     {
         _Rb = GetComponent<Rigidbody2D>();
         _HealthSystem = GetComponent<HealthSystem>();
+        _Animator = GetComponentInChildren<Animator>();
+        _Visuals = GetComponentInChildren<SpriteRenderer>();
+        _Collider = GetComponent<CapsuleCollider2D>();
 
         EnemySharedData._PlayerTransform = transform;
-        if (HasCollider) _Collider.isTrigger = _UseTriggerColliders;
+
+        if (_Collider)
+            _Collider.isTrigger = _UseTriggerColliders;
+
+        if (_PlayerRagdoll)
+            _PlayerRagdoll.Enabled = false;
     }
 
     private void Start()
     {
         SetData();
 
-        if (CameraManager.HasInstance) CameraManager.Instance.FollowTarget = transform;
+        if (CameraManager.HasInstance)
+            CameraManager.Instance.FollowTarget = transform;
 
         _HealthSystem.Reset();
         UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
@@ -118,8 +131,11 @@ public class PlayerController : MonoBehaviour
             InputManager.Instance.BindPlayerMove(OnMove, true);
         }
 
-        if (_HealthSystem != null)
+        if (_HealthSystem)
+        {
+            _HealthSystem.OnDamage.AddListener(OnDamage);
             _HealthSystem.OnDeath.AddListener(OnDeath);
+        }
     }
 
     private void OnDisable()
@@ -134,8 +150,13 @@ public class PlayerController : MonoBehaviour
             InputManager.Instance.BindPlayerMove(OnMove, false);
         }
 
-        if (_HealthSystem != null)
+        if (_HealthSystem)
+        {
+            _HealthSystem.OnDamage.RemoveListener(OnDamage);
             _HealthSystem.OnDeath.RemoveListener(OnDeath);
+        }
+
+        StopCoroutine(HitEffect());
     }
 
     private void Update()
@@ -144,7 +165,6 @@ public class PlayerController : MonoBehaviour
         UpdateJump();                       // update jump data
         UpdateMovement(Time.deltaTime);     // update movement velocities
         SetAnimations();                    // set animation states
-        SetVisuals();                       // set player visuals
 
         if (_IsGrounded && _IsMoving)
             _PlayerAudio.PlayFootStep();
@@ -172,8 +192,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Danger"))
-            ApplyDamage(100);
+        if (collision.CompareTag("Danger") && _HealthSystem)
+            _HealthSystem.TakeDamage(_HealthSystem.MaxHealth);
         else if (collision.CompareTag("Checkpoint"))
         {
             OnCheckPoint(collision.transform.position);
@@ -192,7 +212,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (IsInvincible || !IsAlive) return;
+        if (IsInvincible || !IsAlive)
+            return;
         if (collision.CompareTag("Enemy"))
             OnHit(collision.transform.position);
     }
@@ -253,7 +274,8 @@ public class PlayerController : MonoBehaviour
         if (!_IsGrounded && _IsWallAhead)
         {
             _Velocity.x = 0;
-            if (_IsDashing) ResetDash();
+            if (_IsDashing)
+                ResetDash();
             return;
         }
 
@@ -304,12 +326,6 @@ public class PlayerController : MonoBehaviour
 
         // update new position of rigidbody
         _Rb.MovePosition(pos);
-    }
-
-    private void SetVisuals()
-    {
-        if (_Velocity.x != 0)
-            _Visuals.localScale = new Vector3(_Velocity.x < 0 ? -1 : 1, 1, 1);
     }
 
     void SetJump()
@@ -400,7 +416,7 @@ public class PlayerController : MonoBehaviour
         bool wasGrounded = _IsGrounded;
         _IsGrounded = _IsWallAhead = _IsCeilingAbove = false;
 
-        if (HasCollider)
+        if (_Collider)
         {
             Vector2 pos = transform.position;
             pos += _Collider.offset;
@@ -428,6 +444,9 @@ public class PlayerController : MonoBehaviour
 
     void SetAnimations()
     {
+        if (_Visuals && _Velocity.x != 0)
+            _Visuals.flipX = _Velocity.x < 0;
+
         if (_Animator == null)
             return;
 
@@ -444,36 +463,43 @@ public class PlayerController : MonoBehaviour
         return force;
     }
 
-    private void ApplyDamage(int damage)
+    private void OnDamage()
     {
-        if (IsInvincible) return;
-        if (_HealthSystem != null)
-        {
-            _HealthSystem.TakeDamage(damage);
-            UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
-        }
+        if (IsInvincible)
+            return;
+
+        _lastDamageTime = Time.time;
+        UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
         if (CameraManager.Instance)
             CameraManager.Instance.ApplyShake(_CameraShake);
+        StartCoroutine(HitEffect());
     }
 
-    private void OnHit(Vector2 hitPos)
+    private void OnHit(Vector2? hitPos = null)
     {
-        if (IsInvincible) return;
+        if (IsInvincible)
+            return;
 
-        ApplyDamage(1);
+        if (hitPos != null)
+        {
+            Vector2 dir = ((Vector2)transform.position - hitPos.Value).normalized;
+            _DamageResponseForce += dir * _DamageForce;
+        }
 
-        Vector2 dir = ((Vector2)transform.position - hitPos).normalized;
-        _DamageResponseForce += dir * _DamageForce;
-        _lastHitTime = Time.time;
+        if (_HealthSystem)
+            _HealthSystem.TakeDamage(1);
     }
 
     private void OnDeath()
     {
-        if (InputManager.HasInstance)
-            InputManager.Instance.SetPlayerInput(false);
-
         GameManager.OnPlayerDead?.Invoke();
-        // Invoke(nameof(OnRespawn), _RespawnTime);
+
+        _Rb.simulated = false;
+
+        EnemySharedData._PlayerTransform = null;
+
+        if (_PlayerRagdoll)
+            _PlayerRagdoll.Enabled = true;
     }
 
     private void OnRespawn()
@@ -481,22 +507,32 @@ public class PlayerController : MonoBehaviour
         _HealthSystem.Reset();
         UIManager.OnHealthUpdate?.Invoke(_HealthSystem.Health, _HealthSystem.MaxHealth);
 
-        _Rb.simulated = false;
+        if (_PlayerRagdoll)
+            _PlayerRagdoll.Enabled = false;
+
+        EnemySharedData._PlayerTransform = transform;
+
         transform.position = _CheckpointPos;
         _Rb.simulated = true;
-
-        if (InputManager.Instance != null)
-            InputManager.Instance.SetPlayerInput(true);
     }
 
     private void OnCheckPoint(Vector2 pos) => _CheckpointPos = pos;
+
+    IEnumerator HitEffect()
+    {
+        // slow time for a brief moment
+        Time.timeScale = _HitSlowTimeScale;
+        yield return new WaitForSecondsRealtime(_HitEffectTime);
+        Time.timeScale = 1f;
+    }
 
     #region Inputs
     void OnDash() => SetDash();
 
     private void OnJump(bool _val)
     {
-        if (_val) SetJump();
+        if (_val)
+            SetJump();
     }
 
     private void OnMove(Vector2 value) => _MoveInput = new(Mathf.RoundToInt(value.x), Mathf.RoundToInt(value.y));

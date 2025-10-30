@@ -53,7 +53,7 @@ MonoBehaviour:
   _WalkSpeed: 3
   _Offset: {x: 0, y: -0.2}
   _GroundCheckDistance: 0.61
-  _SideCheckDistance: 0.56
+  _SideCheckDistance: 0.58
   _GroundLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -77,6 +77,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -98,6 +100,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 928923775
   m_SortingLayer: -1
   m_SortingOrder: 2
@@ -156,8 +159,8 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.6747204}
-  m_EdgeRadius: 0
+  m_Size: {x: 0.92, y: 0.58}
+  m_EdgeRadius: 0.08
 --- !u!50 &2099677276537452515
 Rigidbody2D:
   serializedVersion: 5
@@ -170,7 +173,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 0.6747204
+  m_Mass: 0.5336
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 4
@@ -220,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MaxHealth: 3
-  OnHit:
+  OnDamage:
     m_PersistentCalls:
       m_Calls: []
   OnDeath:

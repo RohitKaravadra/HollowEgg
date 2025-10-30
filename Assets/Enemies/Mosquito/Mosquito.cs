@@ -94,10 +94,10 @@ public class Mosquito : EnemyBase
         _Rigidbody.gravityScale = 4;
     }
 
-    protected override void Reset()
+    protected override void ResetEnemy()
     {
         gameObject.layer = _MyLayer;
         _Rigidbody.gravityScale = 0;
-        base.Reset();
+        base.ResetEnemy();
     }
 }

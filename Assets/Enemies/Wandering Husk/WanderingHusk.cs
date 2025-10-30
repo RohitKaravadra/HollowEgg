@@ -1,5 +1,4 @@
 
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -17,7 +16,7 @@ public class WanderingHusk : EnemyBase
 
     private bool _WallAhead = false;
     private bool _GroundAhead = false;
-    private bool IsGrounded => _Rigidbody.IsTouchingLayers(_GroundLayer);
+    private bool _IsGrounded = false;
     private bool _TooCloseToTarget = false;
 
     private int _Dir = 1;
@@ -29,6 +28,7 @@ public class WanderingHusk : EnemyBase
         Patrol,
         Chase
     }
+
     State _CurrentState = State.Patrol;
 
     public override void Start()
@@ -78,6 +78,7 @@ public class WanderingHusk : EnemyBase
         if (!CanMove || !_HealthSystem.IsAlive)
             return;
 
+        _IsGrounded = _Rigidbody.IsTouchingLayers(_GroundLayer);
         CheckCollisions();
         SetState();
         SetDirections();
@@ -98,7 +99,7 @@ public class WanderingHusk : EnemyBase
 
     private void SetDirections()
     {
-        if (!IsGrounded) return;
+        if (!_IsGrounded) return;
         if (State.Chase == _CurrentState)
         {
             _Dir = _ChaseDir;
@@ -118,7 +119,7 @@ public class WanderingHusk : EnemyBase
 
     private void Move()
     {
-        if (!IsGrounded || _TooCloseToTarget) return;
+        if (!_IsGrounded || _TooCloseToTarget) return;
         float speed = _CurrentState == State.Patrol ? _WalkSpeed : _ChaseSpeed;
         _Rigidbody.linearVelocityX = speed * _Dir;
     }

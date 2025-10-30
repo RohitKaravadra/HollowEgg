@@ -238,7 +238,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit
+  m_text: Main Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44a97a0675525bd4b97c0e6d52a6071c, type: 2}
   m_sharedMaterial: {fileID: -59865216119642753, guid: 44a97a0675525bd4b97c0e6d52a6071c, type: 2}
@@ -1741,7 +1741,7 @@ GameObject:
   - component: {fileID: 2455479042604413488}
   - component: {fileID: 6962296918206395709}
   m_Layer: 0
-  m_Name: Quit Button
+  m_Name: Main Menu Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3378,7 +3378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ResumeButton: {fileID: 3183701022353737325}
   _OptionsButton: {fileID: 3451743553909944102}
-  _QuitButton: {fileID: 2455479042604413488}
+  _MainMenuButton: {fileID: 2455479042604413488}
   _MainPanel: {fileID: 8584635749807479611}
   _PausePanel: {fileID: 2204506940421493000}
   _GameOverPanel: {fileID: 5778064632102268200}
