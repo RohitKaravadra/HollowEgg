@@ -46,7 +46,7 @@ Material:
     - _Speed: 0.05
     - _Strength: 0.1
     m_Colors:
-    - _Offset: {r: -0.6279507, g: -0.13261223, b: 0, a: 0}
+    - _Offset: {r: 11.277434, g: -1.2887502, b: 0, a: 0}
     - _Tiling: {r: 1, g: 0.3, b: 0, a: 0}
     - _Tint: {r: 0.4660377, g: 0.62622637, b: 1, a: 1}
   m_BuildTextureStacks: []

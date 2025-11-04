@@ -166,8 +166,8 @@ public class PlayerController : MonoBehaviour
         UpdateMovement(Time.deltaTime);     // update movement velocities
         SetAnimations();                    // set animation states
 
-        if (_IsGrounded && _IsMoving)
-            _PlayerAudio.PlayFootStep();
+        if (_IsGrounded && _IsMoving && !_IsDashing)
+            _PlayerAudio.PlayFootStep(Mathf.Abs(_Velocity.x));
     }
 
     private void FixedUpdate() => Move(Time.fixedDeltaTime);  // apply movement
@@ -500,6 +500,8 @@ public class PlayerController : MonoBehaviour
 
         if (_PlayerRagdoll)
             _PlayerRagdoll.Enabled = true;
+
+        _PlayerAudio.PlayDeath();
     }
 
     private void OnRespawn()

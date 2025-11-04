@@ -4,12 +4,17 @@ using UnityEngine;
 public class PlayerAudio
 {
     [SerializeField] AudioSource _Source;
-    [SerializeField] AudioClip _FootStepSound;
     [SerializeField] AudioClip _DashSound;
     [SerializeField] AudioClip _SlashSound;
     [SerializeField] AudioClip _landSound;
     [SerializeField] AudioClip _HitSound;
     [SerializeField] AudioClip _DeathSound;
+    [Space(10)]
+    [SerializeField] float _FootStepInterval = 0.5f;
+    [SerializeField] AudioClip[] _FootStepSound;
+
+    int currentFootstepIndex = 0;
+    float lastFootstepTime = 0f;
 
     public void PlaySlash()
     {
@@ -41,9 +46,16 @@ public class PlayerAudio
             _Source.PlayOneShot(_landSound);
     }
 
-    public void PlayFootStep()
+    public void PlayFootStep(float speed = 1)
     {
         if (_Source != null && _FootStepSound != null)
-            _Source.PlayOneShot(_FootStepSound);
+        {
+
+            if ((Time.time - lastFootstepTime) * speed < _FootStepInterval)
+                return;
+            _Source.PlayOneShot(_FootStepSound[currentFootstepIndex]);
+            currentFootstepIndex = (currentFootstepIndex + 1) % _FootStepSound.Length;
+            lastFootstepTime = Time.time;
+        }
     }
 }

@@ -34,7 +34,7 @@ public class FalseKnight : EnemyBase
     [Space(5)]
     [SerializeField] Rigidbody2D.SlideMovement _SlideMovement;
     [SerializeField] ContactFilter2D _GroundFilter;
-    [SerializeField] ShakeData _LandShake;
+    [SerializeField] ShakeData _Shake;
 
     #endregion
 
@@ -198,7 +198,7 @@ public class FalseKnight : EnemyBase
         _IsGrounded = HasCollider && _Collider.Cast(Vector2.down, _GroundFilter, hits, 0.4f) > 0;
 
         if (!wasGrounded && _IsGrounded && CameraManager.HasInstance)
-            CameraManager.Instance.ApplyShake(_LandShake, transform.position);
+            CameraManager.Instance.ApplyShake(_Shake, transform.position);
     }
 
     Vector2 CalculateJumpVelocity(Vector2 start, Vector2 end, float height)
@@ -281,6 +281,8 @@ public class FalseKnight : EnemyBase
         Collider2D hit = Physics2D.OverlapBox(attackPos, _AttackSize, 0f, _AttackLayer);
         if (hit != null && hit.TryGetComponent(out HealthSystem health))
             health.TakeDamage(1);
+        CameraManager.Instance.ApplyShake(_Shake, transform.position);
+
 
 #if UNITY_EDITOR
         // draw debug box

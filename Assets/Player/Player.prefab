@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5963060744550667609
 Transform:
@@ -102,7 +102,7 @@ GameObject:
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &6105013555113377623
 Transform:
@@ -269,7 +269,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8041898077893630680
 Transform:
@@ -403,7 +403,7 @@ GameObject:
   m_TagString: Player
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &367684846679418754
 Transform:
@@ -477,12 +477,23 @@ MonoBehaviour:
       m_Bits: 179
   _PlayerAudio:
     _Source: {fileID: 1239156921469477114}
-    _FootStepSound: {fileID: 8300000, guid: c7f9337f3eec85d4f82d934cb11b37f0, type: 3}
     _DashSound: {fileID: 8300000, guid: 9e57b84f2d157be44b2ee8df1a63282c, type: 3}
     _SlashSound: {fileID: 8300000, guid: 90f110541b9904a4eb9b8cd627209755, type: 3}
     _landSound: {fileID: 8300000, guid: 6dc016d089a58fa4a997b60e7f7f7f6c, type: 3}
     _HitSound: {fileID: 0}
-    _DeathSound: {fileID: 0}
+    _DeathSound: {fileID: 8300000, guid: 96253d52924d36344aebf6439bb08847, type: 3}
+    _FootStepInterval: 3
+    _FootStepSound:
+    - {fileID: 8300000, guid: ae90a50ae44672a4d86a8e0f78398d95, type: 3}
+    - {fileID: 8300000, guid: 50896361b3337b14583d25ee249045b9, type: 3}
+    - {fileID: 8300000, guid: a05229fd2be3a8847a20c7161f2ae0bd, type: 3}
+    - {fileID: 8300000, guid: 6987cb3d6d18acd498ad41c310fda2f6, type: 3}
+    - {fileID: 8300000, guid: 7ef5466f3a869494ea14356e2721476b, type: 3}
+    - {fileID: 8300000, guid: a691b48b3f28daa449fd56c83af98684, type: 3}
+    - {fileID: 8300000, guid: fad9076e64335354b92b7afa2bfee4ec, type: 3}
+    - {fileID: 8300000, guid: 2a02b4f891bdb8e4d83da01d08f7c43b, type: 3}
+    - {fileID: 8300000, guid: 5e7c86bed1f4fa84a83a8d57419dd374, type: 3}
+    - {fileID: 8300000, guid: 5ab025798a9068d469329224968d93cb, type: 3}
   _PlayerRagdoll: {fileID: 8402668962113626212}
 --- !u!114 &9133427305098917145
 MonoBehaviour:
