@@ -10,7 +10,7 @@
 <p align="center">
   <img src="https://github.com/RohitKaravadra/HollowEgg/blob/main/Readme/Image.webp?raw=true" 
        alt="HollowEgg Gameplay Screenshot" 
-       width="70%" 
+       width="90%" 
        style="border-radius:10px;">
 </p>
 
